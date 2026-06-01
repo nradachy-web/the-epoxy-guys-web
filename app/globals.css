@@ -1,0 +1,316 @@
+@import "tailwindcss";
+
+/* ============================================================
+   THE EPOXY GUYS — "Liquid Graphite" design system
+   Dark, glossy, mirror-floor luxe. Molten-metallic accent.
+   The customer's floor is the hero: reflective, premium, real.
+   ============================================================ */
+
+@theme {
+  /* graphite base — deep, neutral, slightly cool */
+  --color-void: #0a0b0d;
+  --color-graphite: #101216;
+  --color-slate-900: #14171c;
+  --color-slate-800: #191d23;
+  --color-slate-700: #232830;
+  --color-slate-600: #333a45;
+  --color-line: #2a2f38;
+
+  /* platinum / brushed-chrome accent (monochrome, matches the B/W logo) */
+  --color-molten: #c6ccd6;
+  --color-molten-bright: #f5f8fc;
+  --color-molten-deep: #838c9a;
+  --color-ember: #aab2bf;
+
+  /* secondary neutral steel */
+  --color-steel: #9aa2af;
+  --color-steel-deep: #5c636e;
+
+  /* text / neutrals */
+  --color-bone: #f6f4ef;
+  --color-mist: #c7ccd4;
+  --color-ash: #8a909b;
+  --color-faint: #5b616c;
+
+  --font-display: var(--font-sora), "Helvetica Neue", Arial, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  --shadow-soft: 0 2px 10px rgba(0, 0, 0, 0.35), 0 18px 50px rgba(0, 0, 0, 0.45);
+  --shadow-lift: 0 6px 22px rgba(0, 0, 0, 0.45), 0 34px 80px rgba(0, 0, 0, 0.6);
+  --shadow-glow: 0 8px 34px -10px rgba(226, 232, 240, 0.3);
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+:root {
+  --background: var(--color-graphite);
+  --foreground: var(--color-bone);
+}
+
+* {
+  border-color: var(--color-line);
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  background: var(--color-void);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .animate-kenburns,
+  .animate-float,
+  .animate-marquee {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--color-molten);
+  color: var(--color-void);
+}
+
+/* ---- typography helpers ---- */
+.font-display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 0.98;
+}
+.text-balance {
+  text-wrap: balance;
+}
+.text-pretty {
+  text-wrap: pretty;
+}
+.eyebrow {
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-molten-bright);
+}
+
+/* brushed-chrome gradient text, bright so accent words pop on dark */
+.molten-text {
+  background: linear-gradient(
+    100deg,
+    #ffffff 0%,
+    #cdd4de 48%,
+    #ffffff 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+/* polished chrome text */
+.chrome-text {
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #d6dbe2 38%,
+    #9aa1ab 52%,
+    #eef1f5 70%,
+    #b6bcc6 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---- surfaces ---- */
+.glass {
+  background: color-mix(in oklab, var(--color-graphite) 72%, transparent);
+  backdrop-filter: saturate(140%) blur(14px);
+  -webkit-backdrop-filter: saturate(140%) blur(14px);
+}
+.panel {
+  background: linear-gradient(
+    180deg,
+    var(--color-slate-800),
+    var(--color-slate-900)
+  );
+  border: 1px solid var(--color-line);
+}
+.hairline {
+  border: 1px solid color-mix(in oklab, var(--color-bone) 8%, transparent);
+}
+
+/* molten edge highlight for featured cards */
+.molten-edge {
+  position: relative;
+}
+.molten-edge::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    140deg,
+    color-mix(in oklab, var(--color-molten) 70%, transparent),
+    transparent 40%,
+    transparent 60%,
+    color-mix(in oklab, var(--color-steel) 40%, transparent)
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* ---- sheen sweep (glossy highlight crossing a surface) ---- */
+.sheen {
+  position: relative;
+  overflow: hidden;
+}
+.sheen::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    100deg,
+    transparent,
+    rgba(255, 255, 255, 0.18),
+    transparent
+  );
+  transform: skewX(-18deg);
+  transition: left 0.8s var(--ease-out-soft);
+}
+.sheen:hover::before {
+  left: 150%;
+}
+
+/* link underline grow */
+.link-underline {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1.5px;
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  transition: background-size 0.3s var(--ease-out-soft);
+}
+.link-underline:hover {
+  background-size: 100% 1.5px;
+}
+
+/* reflective floor fade under hero imagery */
+.reflect {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 60%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(to bottom, #000 0%, #000 60%, transparent 100%);
+}
+
+/* subtle film grain over dark imagery */
+.grain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---- keyframes ---- */
+@keyframes kenburns {
+  0% {
+    transform: scale(1.06) translate3d(0, 0, 0);
+  }
+  100% {
+    transform: scale(1.16) translate3d(-1.2%, -1.4%, 0);
+  }
+}
+.animate-kenburns {
+  animation: kenburns 26s var(--ease-in-out-soft) infinite alternate;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+.animate-shimmer {
+  background-size: 200% auto;
+  animation: shimmer 6s linear infinite;
+}
+
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+.animate-float {
+  animation: float-slow 7s ease-in-out infinite;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.animate-marquee {
+  animation: marquee 38s linear infinite;
+}
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(226, 232, 240, 0.45);
+  }
+  70% {
+    box-shadow: 0 0 0 16px rgba(226, 232, 240, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(226, 232, 240, 0);
+  }
+}
+.animate-pulse-ring {
+  animation: pulse-ring 2.6s var(--ease-out-soft) infinite;
+}
+
+/* utility: thin scrollbar-free horizontal scroller */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
