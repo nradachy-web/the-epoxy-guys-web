@@ -372,6 +372,63 @@ export const services: Service[] = [
   },
 ];
 
+/** Per-service media + sales copy that isn't on the base Service type:
+ *  a stakes line (the cost of not acting), a review to feature, and two real
+ *  photos used for the framed lead image and the cinematic photo band. */
+export const serviceMedia: Record<
+  string,
+  { stakes: string; reviewMatch: string; gallery: [string, string] }
+> = {
+  "garage-floor-coatings": {
+    stakes:
+      "A bare or peeling garage floor traps dust, soaks up oil and road salt, and looks worse every year. Putting it off only makes the slab harder to save.",
+    reviewMatch: "garage",
+    gallery: ["/photos/gallery-real-02.jpg", "/photos/real-corvette-flake-floor.jpg"],
+  },
+  "basement-floor-coatings": {
+    stakes:
+      "Left bare, a basement stays cold, damp, and prone to musty smells, and the square footage you pay for every month goes to waste.",
+    reviewMatch: "basement",
+    gallery: ["/photos/gallery-real-04.jpg", "/photos/gallery-real-09.jpg"],
+  },
+  "commercial-industrial-epoxy": {
+    stakes:
+      "A worn or failing floor fails inspections, traps grime, and quietly tells every customer and inspector that the details here do not matter.",
+    reviewMatch: "commercial",
+    gallery: ["/photos/gallery-real-06.jpg", "/photos/gallery-real-08.jpg"],
+  },
+  "polyaspartic-coatings": {
+    stakes:
+      "Cheap epoxy and box-store kits look fine for a season, then peel, yellow, and bubble. Then you pay to do the entire floor a second time.",
+    reviewMatch: "one day",
+    gallery: ["/photos/gallery-real-09.jpg", "/photos/gallery-real-02.jpg"],
+  },
+  "polished-concrete": {
+    stakes:
+      "Tile cracks, carpet wears out, and replacement floors keep adding up. The slab you already own can outlast all of them with the right finish.",
+    reviewMatch: "stained",
+    gallery: ["/photos/gallery-real-01.jpg", "/photos/gallery-real-07.jpg"],
+  },
+  "residential-epoxy-flooring": {
+    stakes:
+      "Grout stains, vinyl peels, and the busiest rooms in the house never look truly clean no matter how hard you scrub.",
+    reviewMatch: "floor",
+    gallery: ["/photos/gallery-real-03.jpg", "/photos/gallery-real-10.jpg"],
+  },
+  "custom-logo-floors": {
+    stakes:
+      "A blank floor is a missed first impression. People remember a branded entry long after they forget the sign on the wall.",
+    reviewMatch: "garage",
+    gallery: ["/photos/finish-logo.jpg", "/photos/real-corvette-flake-floor.jpg"],
+  },
+  "surface-prep-and-repair": {
+    stakes:
+      "Skip the prep and even the most beautiful coating peels within a winter or two. Proper prep is the difference between a 15-year floor and a callback.",
+    reviewMatch: "pitted",
+    gallery: ["/photos/gallery-real-05.jpg", "/photos/gallery-real-09.jpg"],
+  },
+};
+
 export type Finish = {
   slug: string;
   name: string;
