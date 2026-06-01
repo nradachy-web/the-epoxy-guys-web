@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { finishes, services, serviceAreas, site } from "@/lib/site";
+import { finishes, services, site } from "@/lib/site";
 import { Icon } from "@/components/ui/Icons";
 
 function resolveService(slugOrName: string): string {
@@ -96,14 +96,15 @@ export function QuoteForm({ defaultService = "" }: { defaultService?: string }) 
           <input id="qf-email" name="email" type="email" autoComplete="email" className={field} placeholder="you@email.com" />
         </div>
         <div>
-          <label className={label} htmlFor="qf-city">City</label>
-          <select id="qf-city" name="city" className={field} defaultValue="">
-            <option value="" disabled>Choose your city</option>
-            {serviceAreas.map((a) => (
-              <option key={a.slug} value={a.city}>{a.city}</option>
-            ))}
-            <option value="Other">Other / nearby</option>
-          </select>
+          <label className={label} htmlFor="qf-address">Address</label>
+          <input
+            id="qf-address"
+            name="address"
+            type="text"
+            autoComplete="street-address"
+            className={field}
+            placeholder="Street, city, ZIP"
+          />
         </div>
         <div>
           <label className={label} htmlFor="qf-service">Project type</label>
