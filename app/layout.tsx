@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Sora, Inter } from "next/font/google";
+import { Archivo, Hanken_Grotesk } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
@@ -9,13 +9,18 @@ import { JsonLd, localBusinessSchema } from "@/lib/schema";
 import { site } from "@/lib/site";
 import { asset } from "@/lib/asset";
 
-const sora = Sora({
+const archivo = Archivo({
   subsets: ["latin"],
-  variable: "--font-sora",
+  variable: "--font-archivo",
   display: "swap",
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["500", "600", "700", "800", "900"],
 });
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
+const hanken = Hanken_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-hanken",
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -62,14 +67,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${sora.variable} ${inter.variable} antialiased`}>
-      <body className="min-h-screen bg-graphite text-bone">
+    <html lang="en" className={`${archivo.variable} ${hanken.variable} antialiased`}>
+      <body className="min-h-screen bg-paper text-ink">
         <JsonLd data={localBusinessSchema()} />
         <link rel="preload" as="image" href={asset("/photos/hero-main.webp")} type="image/webp" fetchPriority="high" />
         <ScrollProgress />
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-molten focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-void"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-accent focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white"
         >
           Skip to content
         </a>

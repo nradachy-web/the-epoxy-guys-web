@@ -23,7 +23,7 @@ export function ServicesGrid({
               eyebrow="What we do"
               title={
                 <>
-                  One crew, every kind of <span className="molten-text">concrete coating</span>.
+                  One crew, every kind of <span className="text-accent">concrete coating</span>.
                 </>
               }
               lead="Garages, basements, businesses, and everything in between. Whatever the space, we prep it right and finish it to last."
@@ -39,7 +39,7 @@ export function ServicesGrid({
             <RevealItem key={s.slug}>
               <Link
                 href={`/services/${s.slug}`}
-                className="group sheen panel molten-edge relative flex h-full min-w-0 flex-col overflow-hidden rounded-2xl transition-transform duration-500 hover:-translate-y-1"
+                className="group relative flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-line bg-white shadow-[var(--shadow-soft)] transition-all duration-200 hover:-translate-y-1 hover:border-line-2 hover:shadow-[var(--shadow-lift)]"
               >
                 <div className="relative aspect-[16/10] overflow-hidden">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -47,25 +47,21 @@ export function ServicesGrid({
                     src={asset(s.image)}
                     alt={s.name}
                     loading="lazy"
-                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
-                  <div
-                    className="absolute inset-0"
-                    style={{ background: "linear-gradient(to top, rgba(8,9,11,0.85), transparent 60%)" }}
-                  />
-                  <span className="absolute left-3 top-3 grid h-9 w-9 place-items-center rounded-lg border border-line bg-void/70 text-molten-bright backdrop-blur">
+                  <span className="absolute left-3 top-3 grid h-9 w-9 place-items-center rounded-lg bg-white/95 text-ink shadow-[var(--shadow-soft)] backdrop-blur">
                     <Icon name={s.icon} size={18} />
                   </span>
                   {i === 0 ? (
-                    <span className="absolute right-3 top-3 rounded-full border border-molten/40 bg-void/70 px-2.5 py-1 text-[0.68rem] font-semibold uppercase tracking-wide text-molten-bright backdrop-blur">
+                    <span className="absolute right-3 top-3 rounded-full bg-accent px-2.5 py-1 text-[0.68rem] font-semibold uppercase tracking-wide text-white">
                       Most popular
                     </span>
                   ) : null}
                 </div>
                 <div className="flex flex-1 flex-col p-5">
-                  <h3 className="font-display text-xl text-bone">{s.name}</h3>
-                  <p className="mt-2 flex-1 text-sm leading-relaxed text-ash">{s.promise}</p>
-                  <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-molten-bright">
+                  <h3 className="font-display text-xl text-ink">{s.name}</h3>
+                  <p className="mt-2 flex-1 text-sm leading-relaxed text-muted">{s.promise}</p>
+                  <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-accent">
                     Explore
                     <Icon name="arrow" size={15} className="transition-transform group-hover:translate-x-0.5" />
                   </span>

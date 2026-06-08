@@ -13,8 +13,8 @@ function resolveService(slugOrName: string): string {
 }
 
 const field =
-  "w-full rounded-xl border border-line bg-slate-800/60 px-4 py-3 text-[0.95rem] text-bone placeholder:text-ash transition focus:border-molten/50 focus:outline-none focus:ring-2 focus:ring-molten/25";
-const label = "mb-1.5 block text-sm font-medium text-mist";
+  "w-full rounded-xl border border-line-2 bg-surface-2 px-4 py-3 text-[0.95rem] text-ink placeholder:text-muted transition focus:border-accent/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-accent/20";
+const label = "mb-1.5 block text-sm font-medium text-ink-2";
 
 export function QuoteForm({ defaultService = "" }: { defaultService?: string }) {
   const [status, setStatus] = useState<"idle" | "sending" | "ok" | "error">("idle");
@@ -140,7 +140,7 @@ export function QuoteForm({ defaultService = "" }: { defaultService?: string }) 
       <button
         type="submit"
         disabled={status === "sending"}
-        className="sheen mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-molten-bright px-6 py-3.5 font-semibold text-void shadow-[var(--shadow-glow)] transition hover:bg-white disabled:opacity-60"
+        className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-6 py-3.5 font-semibold text-white shadow-[var(--shadow-glow)] transition hover:bg-accent-strong disabled:opacity-60"
       >
         {status === "sending" ? "Sending..." : "Request my free quote"}
         {status !== "sending" ? <Icon name="arrow" size={18} /> : null}

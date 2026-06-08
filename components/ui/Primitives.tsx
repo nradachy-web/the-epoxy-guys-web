@@ -29,7 +29,7 @@ export function Section({
 export function Eyebrow({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
     <span className={`eyebrow inline-flex items-center gap-2 ${className}`}>
-      <span className="h-px w-6 bg-molten/70" aria-hidden />
+      <span className="h-px w-6 bg-accent" aria-hidden />
       {children}
     </span>
   );
@@ -52,10 +52,10 @@ export function SectionHeading({
   return (
     <div className={`${center ? "mx-auto text-center" : ""} max-w-2xl ${className}`}>
       {eyebrow ? <Eyebrow className={center ? "justify-center" : ""}>{eyebrow}</Eyebrow> : null}
-      <h2 className="font-display mt-4 text-balance text-3xl text-bone sm:text-4xl md:text-[2.7rem]">
+      <h2 className="font-display mt-4 text-balance text-[2rem] leading-[1.02] text-ink sm:text-4xl md:text-[2.85rem]">
         {title}
       </h2>
-      {lead ? <p className="mt-5 text-pretty text-lg leading-relaxed text-mist">{lead}</p> : null}
+      {lead ? <p className="mt-5 text-pretty text-lg leading-relaxed text-ink-2">{lead}</p> : null}
     </div>
   );
 }
@@ -63,7 +63,7 @@ export function SectionHeading({
 export function Pill({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full border border-line bg-slate-800/60 px-3 py-1 text-xs font-medium text-mist ${className}`}
+      className={`inline-flex items-center gap-1.5 rounded-full border border-line bg-surface px-3 py-1 text-xs font-medium text-ink-2 ${className}`}
     >
       {children}
     </span>

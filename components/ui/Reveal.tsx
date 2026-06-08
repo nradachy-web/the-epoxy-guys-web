@@ -12,7 +12,7 @@ type RevealProps = {
 };
 
 /** Fade + rise into view. Respects prefers-reduced-motion. */
-export function Reveal({ children, className, delay = 0, y = 30, as = "div" }: RevealProps) {
+export function Reveal({ children, className, delay = 0, y = 16, as = "div" }: RevealProps) {
   const reduce = useReducedMotion();
   const MotionTag = motion[as];
   return (
@@ -20,8 +20,8 @@ export function Reveal({ children, className, delay = 0, y = 30, as = "div" }: R
       className={className}
       initial={reduce ? { opacity: 0 } : { opacity: 0, y }}
       whileInView={reduce ? { opacity: 1 } : { opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "0px 0px -12% 0px" }}
-      transition={{ duration: 0.75, delay, ease: [0.22, 1, 0.36, 1] }}
+      viewport={{ once: true, margin: "0px 0px -10% 0px" }}
+      transition={{ duration: 0.5, delay, ease: [0.22, 1, 0.36, 1] }}
     >
       {children}
     </MotionTag>
@@ -55,7 +55,7 @@ export function RevealGroup({
 export function RevealItem({
   children,
   className,
-  y = 30,
+  y = 18,
 }: {
   children: ReactNode;
   className?: string;
@@ -67,7 +67,7 @@ export function RevealItem({
       className={className}
       variants={{
         hidden: reduce ? { opacity: 0 } : { opacity: 0, y },
-        show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } },
+        show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
       }}
     >
       {children}

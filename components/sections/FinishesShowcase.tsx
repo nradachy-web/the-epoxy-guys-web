@@ -9,14 +9,14 @@ import { RevealGroup, RevealItem } from "@/components/ui/Reveal";
 export function FinishesShowcase({ limit }: { limit?: number }) {
   const list = limit ? finishes.slice(0, limit) : finishes;
   return (
-    <Section className="bg-slate-900/40">
+    <Section className="bg-surface-2">
       <Container>
         <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
           <SectionHeading
             eyebrow="Make it yours"
             title={
               <>
-                Pick a finish that <span className="molten-text">turns heads</span>.
+                Pick a finish that <span className="text-accent">turns heads</span>.
               </>
             }
             lead="Flake, metallic, quartz, glitter, polished concrete, and more. We match nearly any taste and budget, then seal it to last."
@@ -31,7 +31,7 @@ export function FinishesShowcase({ limit }: { limit?: number }) {
             <RevealItem key={f.slug}>
               <Link
                 href={`/finishes#${f.slug}`}
-                className="group relative block aspect-square min-w-0 overflow-hidden rounded-2xl border border-line transition-transform duration-500 hover:-translate-y-0.5"
+                className="group relative block aspect-square min-w-0 overflow-hidden rounded-2xl border border-line shadow-[var(--shadow-soft)] transition-transform duration-300 hover:-translate-y-0.5"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -45,10 +45,10 @@ export function FinishesShowcase({ limit }: { limit?: number }) {
                   style={{ background: "linear-gradient(to top, rgba(8,9,11,0.9) 5%, rgba(8,9,11,0.1) 55%)" }}
                 />
                 <div className="absolute inset-x-0 bottom-0 p-4">
-                  <span className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-molten-bright">
+                  <span className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-white/80">
                     {f.tagline}
                   </span>
-                  <h3 className="font-display mt-1 text-lg leading-tight text-bone">{f.name}</h3>
+                  <h3 className="font-display mt-1 text-lg leading-tight text-white">{f.name}</h3>
                 </div>
               </Link>
             </RevealItem>

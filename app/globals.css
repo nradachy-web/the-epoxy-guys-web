@@ -1,51 +1,71 @@
 @import "tailwindcss";
 
 /* ============================================================
-   THE EPOXY GUYS — "Liquid Graphite" design system
-   Dark, glossy, mirror-floor luxe. Molten-metallic accent.
-   The customer's floor is the hero: reflective, premium, real.
+   THE EPOXY GUYS — "Showroom" design system
+   Bright, honest, premium-industrial. Warm paper, real photos
+   at full brightness, one confident amber accent. Built to look
+   like a real Genesee County crew, not a SaaS landing page.
    ============================================================ */
 
 @theme {
-  /* graphite base — deep, neutral, slightly cool */
-  --color-void: #0a0b0d;
-  --color-graphite: #101216;
-  --color-slate-900: #14171c;
-  --color-slate-800: #191d23;
-  --color-slate-700: #232830;
-  --color-slate-600: #333a45;
-  --color-line: #2a2f38;
+  /* ---- light base (warm paper + clean white) ---- */
+  --color-paper: #fbfaf6;
+  --color-surface: #ffffff;
+  --color-surface-2: #f3f0e8;
+  --color-surface-3: #ece8dd;
 
-  /* platinum / brushed-chrome accent (monochrome, matches the B/W logo) */
-  --color-molten: #c6ccd6;
-  --color-molten-bright: #f5f8fc;
-  --color-molten-deep: #838c9a;
-  --color-ember: #aab2bf;
+  /* ---- ink (warm near-black) ---- */
+  --color-ink: #181a1e;
+  --color-ink-2: #474c54;
+  --color-muted: #767b83;
+  --color-faint-2: #a8abb1;
 
-  /* secondary neutral steel */
-  --color-steel: #9aa2af;
-  --color-steel-deep: #5c636e;
+  /* ---- warm hairlines ---- */
+  --color-line: #e7e2d7;
+  --color-line-2: #d8d2c4;
 
-  /* text / neutrals */
-  --color-bone: #f6f4ef;
-  --color-mist: #c7ccd4;
-  --color-ash: #8a909b;
-  --color-faint: #5b616c;
+  /* ---- the one accent: burnt amber (matches flake + metallic floors) ---- */
+  --color-accent: #c4651a;
+  --color-accent-strong: #a3500f;
+  --color-accent-tint: #fbeedd;
+  --color-accent-ink: #6e3608;
 
-  --font-display: var(--font-sora), "Helvetica Neue", Arial, sans-serif;
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  /* ============================================================
+     Legacy token remap. The inner pages were built on a dark
+     palette; mapping the old names onto the light system keeps
+     them coherent until each gets its own polish pass.
+     ============================================================ */
+  --color-void: var(--color-paper);
+  --color-graphite: var(--color-paper);
+  --color-slate-900: var(--color-surface-2);
+  --color-slate-800: var(--color-surface);
+  --color-slate-700: var(--color-surface-3);
+  --color-slate-600: var(--color-line-2);
+  --color-bone: var(--color-ink);
+  --color-mist: var(--color-ink-2);
+  --color-ash: var(--color-muted);
+  --color-faint: var(--color-faint-2);
+  --color-molten: var(--color-accent);
+  --color-molten-bright: var(--color-accent);
+  --color-molten-deep: var(--color-accent-strong);
+  --color-ember: var(--color-accent);
+  --color-steel: var(--color-muted);
+  --color-steel-deep: var(--color-ink-2);
 
-  --shadow-soft: 0 2px 10px rgba(0, 0, 0, 0.35), 0 18px 50px rgba(0, 0, 0, 0.45);
-  --shadow-lift: 0 6px 22px rgba(0, 0, 0, 0.45), 0 34px 80px rgba(0, 0, 0, 0.6);
-  --shadow-glow: 0 8px 34px -10px rgba(226, 232, 240, 0.3);
+  --font-display: var(--font-archivo), "Helvetica Neue", Arial, sans-serif;
+  --font-sans: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
+
+  --shadow-soft: 0 1px 2px rgba(24, 26, 30, 0.05), 0 12px 30px -18px rgba(24, 26, 30, 0.2);
+  --shadow-lift: 0 2px 6px rgba(24, 26, 30, 0.06), 0 28px 60px -28px rgba(24, 26, 30, 0.26);
+  --shadow-glow: 0 12px 30px -12px rgba(196, 101, 26, 0.4);
 
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 :root {
-  --background: var(--color-graphite);
-  --foreground: var(--color-bone);
+  --background: var(--color-paper);
+  --foreground: var(--color-ink);
 }
 
 * {
@@ -55,7 +75,7 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
-  background: var(--color-void);
+  background: var(--color-paper);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -68,12 +88,6 @@ html {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
-  }
-  .animate-kenburns,
-  .animate-float,
-  .animate-marquee {
-    animation: none !important;
-    transform: none !important;
   }
 }
 
@@ -88,16 +102,16 @@ body {
 }
 
 ::selection {
-  background: var(--color-molten);
-  color: var(--color-void);
+  background: var(--color-accent);
+  color: #fff;
 }
 
-/* ---- typography helpers ---- */
+/* ---- typography ---- */
 .font-display {
   font-family: var(--font-display);
-  font-weight: 700;
-  letter-spacing: -0.025em;
-  line-height: 0.98;
+  font-weight: 800;
+  letter-spacing: -0.022em;
+  line-height: 1;
 }
 .text-balance {
   text-wrap: balance;
@@ -106,104 +120,55 @@ body {
   text-wrap: pretty;
 }
 .eyebrow {
-  font-size: 0.74rem;
-  font-weight: 600;
-  letter-spacing: 0.22em;
+  font-size: 0.73rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--color-molten-bright);
+  color: var(--color-accent);
 }
 
-/* brushed-chrome gradient text, bright so accent words pop on dark */
-.molten-text {
-  background: linear-gradient(
-    100deg,
-    #ffffff 0%,
-    #cdd4de 48%,
-    #ffffff 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-/* polished chrome text */
+/* accent word inside a headline — flat amber, no chrome gradients */
+.molten-text,
 .chrome-text {
-  background: linear-gradient(
-    180deg,
-    #ffffff 0%,
-    #d6dbe2 38%,
-    #9aa1ab 52%,
-    #eef1f5 70%,
-    #b6bcc6 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--color-accent);
+  -webkit-text-fill-color: currentColor;
+  background: none;
 }
 
 /* ---- surfaces ---- */
 .glass {
-  background: color-mix(in oklab, var(--color-graphite) 72%, transparent);
-  backdrop-filter: saturate(140%) blur(14px);
-  -webkit-backdrop-filter: saturate(140%) blur(14px);
+  background: color-mix(in oklab, white 82%, transparent);
+  backdrop-filter: saturate(125%) blur(12px);
+  -webkit-backdrop-filter: saturate(125%) blur(12px);
 }
 .panel {
-  background: linear-gradient(
-    180deg,
-    var(--color-slate-800),
-    var(--color-slate-900)
-  );
+  background: var(--color-surface);
   border: 1px solid var(--color-line);
+  box-shadow: var(--shadow-soft);
 }
 .hairline {
-  border: 1px solid color-mix(in oklab, var(--color-bone) 8%, transparent);
+  border: 1px solid color-mix(in oklab, var(--color-ink) 8%, transparent);
 }
 
-/* molten edge highlight for featured cards */
-.molten-edge {
-  position: relative;
-}
-.molten-edge::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(
-    140deg,
-    color-mix(in oklab, var(--color-molten) 70%, transparent),
-    transparent 40%,
-    transparent 60%,
-    color-mix(in oklab, var(--color-steel) 40%, transparent)
-  );
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
+/* graph-paper texture for occasional industrial accent panels */
+.blueprint {
+  background-image:
+    linear-gradient(color-mix(in oklab, var(--color-ink) 4%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in oklab, var(--color-ink) 4%, transparent) 1px, transparent 1px);
+  background-size: 26px 26px;
 }
 
-/* ---- sheen sweep (glossy highlight crossing a surface) ---- */
-.sheen {
-  position: relative;
-  overflow: hidden;
+/* neutralized legacy effects (no chrome sweep, glow border, or grain) */
+.molten-edge::after,
+.sheen::before,
+.grain::before {
+  content: none !important;
 }
-.sheen::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -150%;
-  width: 60%;
-  height: 100%;
-  background: linear-gradient(
-    100deg,
-    transparent,
-    rgba(255, 255, 255, 0.18),
-    transparent
-  );
-  transform: skewX(-18deg);
-  transition: left 0.8s var(--ease-out-soft);
-}
-.sheen:hover::before {
-  left: 150%;
+
+/* reflective floor fade under hero imagery */
+.reflect {
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 64%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 64%, transparent 100%);
 }
 
 /* link underline grow */
@@ -218,67 +183,7 @@ body {
   background-size: 100% 1.5px;
 }
 
-/* reflective floor fade under hero imagery */
-.reflect {
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    #000 0%,
-    #000 60%,
-    transparent 100%
-  );
-  mask-image: linear-gradient(to bottom, #000 0%, #000 60%, transparent 100%);
-}
-
-/* subtle film grain over dark imagery */
-.grain::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.06;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
-/* ---- keyframes ---- */
-@keyframes kenburns {
-  0% {
-    transform: scale(1.06) translate3d(0, 0, 0);
-  }
-  100% {
-    transform: scale(1.16) translate3d(-1.2%, -1.4%, 0);
-  }
-}
-.animate-kenburns {
-  animation: kenburns 26s var(--ease-in-out-soft) infinite alternate;
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-.animate-shimmer {
-  background-size: 200% auto;
-  animation: shimmer 6s linear infinite;
-}
-
-@keyframes float-slow {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-.animate-float {
-  animation: float-slow 7s ease-in-out infinite;
-}
-
+/* ---- marquee fallback keyframe (component may still use it elsewhere) ---- */
 @keyframes marquee {
   from {
     transform: translateX(0);
@@ -291,22 +196,6 @@ body {
   animation: marquee 38s linear infinite;
 }
 
-@keyframes pulse-ring {
-  0% {
-    box-shadow: 0 0 0 0 rgba(226, 232, 240, 0.45);
-  }
-  70% {
-    box-shadow: 0 0 0 16px rgba(226, 232, 240, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(226, 232, 240, 0);
-  }
-}
-.animate-pulse-ring {
-  animation: pulse-ring 2.6s var(--ease-out-soft) infinite;
-}
-
-/* utility: thin scrollbar-free horizontal scroller */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }

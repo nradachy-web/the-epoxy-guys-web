@@ -5,7 +5,7 @@ type Variant = "primary" | "outline" | "ghost" | "phone";
 type Size = "sm" | "md" | "lg";
 
 const base =
-  "group relative inline-flex items-center justify-center gap-2 rounded-full font-semibold tracking-tight transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-molten focus-visible:ring-offset-2 focus-visible:ring-offset-graphite disabled:opacity-50";
+  "group relative inline-flex items-center justify-center gap-2 rounded-full font-semibold tracking-tight transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper disabled:opacity-50";
 
 const sizes: Record<Size, string> = {
   sm: "px-4 py-2 text-sm",
@@ -14,13 +14,16 @@ const sizes: Record<Size, string> = {
 };
 
 const variants: Record<Variant, string> = {
+  // amber conversion button
   primary:
-    "sheen bg-molten-bright text-void shadow-[var(--shadow-glow)] hover:bg-white hover:-translate-y-0.5 active:translate-y-0",
+    "bg-accent text-white shadow-[var(--shadow-glow)] hover:bg-accent-strong hover:-translate-y-0.5 active:translate-y-0",
+  // clean ink-outlined secondary
   outline:
-    "border border-line bg-slate-800/40 text-bone backdrop-blur hover:border-molten/60 hover:bg-slate-800/70 hover:-translate-y-0.5",
-  ghost: "text-bone hover:text-molten-bright",
+    "border border-line-2 bg-white text-ink shadow-[var(--shadow-soft)] hover:border-ink/30 hover:bg-surface-2 hover:-translate-y-0.5",
+  ghost: "text-ink hover:text-accent",
+  // solid charcoal — used for the call action so it pairs with the amber quote button
   phone:
-    "border border-molten/40 bg-molten/10 text-molten-bright hover:bg-molten/20 hover:-translate-y-0.5",
+    "bg-ink text-white hover:bg-[#000] hover:-translate-y-0.5 active:translate-y-0",
 };
 
 export function Button({

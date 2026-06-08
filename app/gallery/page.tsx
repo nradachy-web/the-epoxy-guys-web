@@ -48,7 +48,7 @@ export default function GalleryPage() {
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={asset(it.src)} alt={it.alt} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
                   <div className="absolute inset-0 opacity-0 transition-opacity group-hover:opacity-100" style={{ background: "linear-gradient(to top, rgba(8,9,11,0.85), transparent 60%)" }} />
-                  <figcaption className="absolute inset-x-0 bottom-0 p-3 text-xs font-semibold uppercase tracking-wide text-bone opacity-0 transition-opacity group-hover:opacity-100">
+                  <figcaption className="absolute inset-x-0 bottom-0 p-3 text-xs font-semibold uppercase tracking-wide text-white opacity-0 transition-opacity group-hover:opacity-100">
                     {it.tag}
                   </figcaption>
                 </figure>

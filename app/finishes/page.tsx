@@ -49,7 +49,6 @@ export default function FinishesPage() {
                   <div className={`relative overflow-hidden rounded-3xl border border-line ${i % 2 ? "lg:order-last" : ""}`}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={asset(f.image)} alt={`${f.name} epoxy floor finish`} loading="lazy" className="aspect-[5/4] w-full object-cover" />
-                    <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(8,9,11,0.45), transparent 55%)" }} />
                   </div>
                   <div>
                     <span className="eyebrow inline-flex items-center gap-2">

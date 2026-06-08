@@ -6,7 +6,7 @@ import { Icon } from "@/components/ui/Icons";
 export function Footer() {
   const year = 2026;
   return (
-    <footer className="relative border-t border-line bg-void">
+    <footer className="relative border-t border-line bg-surface-2">
       <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8">
         <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div>

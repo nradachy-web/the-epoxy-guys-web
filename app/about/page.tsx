@@ -86,9 +86,9 @@ export default function AboutPage() {
               <div className="relative overflow-hidden rounded-3xl border border-line">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={asset("/photos/real-corvette-flake-floor.jpg")} alt="Glossy flake epoxy garage floor in Genesee County" loading="lazy" className="aspect-[3/4] w-full object-cover" />
-                <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(8,9,11,0.55), transparent 50%)" }} />
-                <div className="absolute bottom-4 left-4 flex items-center gap-2 rounded-full bg-void/70 px-3.5 py-1.5 text-xs text-bone backdrop-blur">
-                  <span className="h-2 w-2 rounded-full bg-molten" /> Flake garage floor
+                <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(8,9,11,0.32), transparent 50%)" }} />
+                <div className="absolute bottom-4 left-4 flex items-center gap-2 rounded-full bg-white/92 px-3.5 py-1.5 text-xs text-ink shadow-[var(--shadow-soft)] backdrop-blur">
+                  <span className="h-2 w-2 rounded-full bg-accent" /> Flake garage floor
                 </div>
               </div>
             </Reveal>

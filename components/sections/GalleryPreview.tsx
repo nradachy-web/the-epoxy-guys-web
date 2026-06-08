@@ -17,10 +17,10 @@ export function GalleryPreview({ limit = 7, heading = true }: { limit?: number; 
               eyebrow="Recent work"
               title={
                 <>
-                  Floors we are <span className="molten-text">proud</span> to put our name on.
+                  Floors we are <span className="text-accent">proud</span> to put our name on.
                 </>
               }
-              lead="A look at the finishes, spaces, and details our customers chose."
+              lead="Real photos from real jobs across Genesee County. No stock, no staging."
             />
             <Button href="/gallery" variant="outline" icon={<Icon name="arrow" size={16} />} className="hidden md:inline-flex">
               Full gallery
@@ -36,20 +36,16 @@ export function GalleryPreview({ limit = 7, heading = true }: { limit?: number; 
             <RevealItem key={it.src} className={it.wide ? "col-span-2 row-span-2" : ""}>
               <Link
                 href="/gallery"
-                className="group relative block h-full min-w-0 overflow-hidden rounded-xl border border-line"
+                className="group relative block h-full min-w-0 overflow-hidden rounded-xl border border-line bg-white shadow-[var(--shadow-soft)]"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={asset(it.src)}
                   alt={it.alt}
                   loading="lazy"
-                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-                <div
-                  className="absolute inset-0 opacity-100 md:opacity-0 md:transition-opacity md:group-hover:opacity-100"
-                  style={{ background: "linear-gradient(to top, rgba(8,9,11,0.8), transparent 55%)" }}
-                />
-                <span className="absolute inset-x-0 bottom-0 p-3 text-xs font-semibold uppercase tracking-wide text-bone opacity-100 md:opacity-0 md:transition-opacity md:group-hover:opacity-100">
+                <span className="absolute bottom-2.5 left-2.5 rounded-full bg-white/92 px-2.5 py-1 text-[0.68rem] font-semibold uppercase tracking-wide text-ink opacity-0 shadow-[var(--shadow-soft)] backdrop-blur transition-opacity duration-200 group-hover:opacity-100">
                   {it.tag}
                 </span>
               </Link>

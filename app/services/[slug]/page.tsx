@@ -151,8 +151,8 @@ export default async function ServiceDetail({
               <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-line">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={asset(media.gallery[0])} alt={`${service.name} by The Epoxy Guys`} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
-                <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(8,9,11,0.5), transparent 55%)" }} />
-                <span className="absolute left-4 top-4 grid h-12 w-12 place-items-center rounded-2xl border border-line bg-void/70 text-molten-bright backdrop-blur">
+                <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(8,9,11,0.35), transparent 55%)" }} />
+                <span className="absolute left-4 top-4 grid h-12 w-12 place-items-center rounded-2xl border border-line bg-white/90 text-ink shadow-[var(--shadow-soft)] backdrop-blur">
                   <Icon name={service.icon} size={24} />
                 </span>
               </div>
@@ -168,11 +168,10 @@ export default async function ServiceDetail({
           <img src={asset(media.gallery[1])} alt="" aria-hidden className="h-[118%] w-full object-cover" loading="lazy" />
         </Parallax>
         <div className="absolute inset-0" style={{ background: "linear-gradient(95deg, rgba(8,9,11,0.85), rgba(8,9,11,0.5) 60%, rgba(8,9,11,0.7))" }} />
-        <div className="grain absolute inset-0" />
         <div className="relative mx-auto flex h-full max-w-7xl items-center px-5 sm:px-8">
           <Reveal className="max-w-2xl">
             <span className="eyebrow">The fix</span>
-            <p className="font-display mt-3 text-balance text-3xl leading-tight text-bone sm:text-4xl md:text-5xl">
+            <p className="font-display mt-3 text-balance text-3xl leading-tight text-white sm:text-4xl md:text-5xl">
               {service.promise}
             </p>
           </Reveal>
@@ -257,8 +256,8 @@ export default async function ServiceDetail({
                     <img src={asset(f.image)} alt={f.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
                     <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(8,9,11,0.9), transparent 60%)" }} />
                     <div className="absolute inset-x-0 bottom-0 p-4">
-                      <h3 className="font-display text-lg text-bone">{f.name}</h3>
-                      <p className="text-xs text-molten-bright">{f.tagline}</p>
+                      <h3 className="font-display text-lg text-white">{f.name}</h3>
+                      <p className="text-xs text-white/80">{f.tagline}</p>
                     </div>
                   </Link>
                 </RevealItem>

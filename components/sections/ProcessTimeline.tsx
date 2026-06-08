@@ -6,14 +6,14 @@ import { RevealGroup, RevealItem } from "@/components/ui/Reveal";
 
 export function ProcessTimeline({ showCta = false }: { showCta?: boolean }) {
   return (
-    <Section id="process">
+    <Section id="process" className="bg-surface-2">
       <Container>
         <SectionHeading
           align="center"
           eyebrow="How it works"
           title={
             <>
-              From bare slab to showroom floor, <span className="molten-text">in one day</span>.
+              From bare slab to showroom floor, <span className="text-accent">in one day</span>.
             </>
           }
           lead="No mystery, no mess left behind. Here is exactly how your project goes."
@@ -22,7 +22,7 @@ export function ProcessTimeline({ showCta = false }: { showCta?: boolean }) {
         <div className="relative mt-16">
           <div
             className="absolute left-0 right-0 top-7 hidden h-px md:block"
-            style={{ background: "linear-gradient(to right, transparent, var(--color-line) 12%, var(--color-line) 88%, transparent)" }}
+            style={{ background: "linear-gradient(to right, transparent, var(--color-line-2) 12%, var(--color-line-2) 88%, transparent)" }}
             aria-hidden
           />
           <RevealGroup className="grid gap-10 md:grid-cols-4 md:gap-6">
@@ -30,12 +30,12 @@ export function ProcessTimeline({ showCta = false }: { showCta?: boolean }) {
               <RevealItem key={p.step}>
                 <div className="relative">
                   <div className="flex items-center gap-4 md:block">
-                    <span className="relative z-10 grid h-14 w-14 shrink-0 place-items-center rounded-full border border-molten/40 bg-graphite font-display text-lg text-molten-bright shadow-[var(--shadow-glow)]">
+                    <span className="relative z-10 grid h-14 w-14 shrink-0 place-items-center rounded-full border border-line-2 bg-white font-display text-lg text-accent shadow-[var(--shadow-soft)]">
                       {p.step}
                     </span>
-                    <h3 className="font-display text-xl text-bone md:mt-5">{p.title}</h3>
+                    <h3 className="font-display text-xl text-ink md:mt-5">{p.title}</h3>
                   </div>
-                  <p className="mt-3 text-sm leading-relaxed text-ash md:mt-4">{p.body}</p>
+                  <p className="mt-3 text-sm leading-relaxed text-muted md:mt-4">{p.body}</p>
                 </div>
               </RevealItem>
             ))}
