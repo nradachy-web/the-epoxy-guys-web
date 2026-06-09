@@ -13,8 +13,8 @@ function resolveService(slugOrName: string): string {
 }
 
 const field =
-  "w-full rounded-xl border border-line-2 bg-surface-2 px-4 py-3 text-[0.95rem] text-ink placeholder:text-muted transition focus:border-accent/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-accent/20";
-const label = "mb-1.5 block text-sm font-medium text-ink-2";
+  "w-full border border-line-2 bg-surface px-4 py-3 text-[0.95rem] text-ink placeholder:text-muted transition focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30";
+const label = "mono-label mb-2 block";
 
 export function QuoteForm({ defaultService = "" }: { defaultService?: string }) {
   const [status, setStatus] = useState<"idle" | "sending" | "ok" | "error">("idle");
@@ -58,18 +58,18 @@ export function QuoteForm({ defaultService = "" }: { defaultService?: string }) 
 
   if (status === "ok") {
     return (
-      <div className="panel molten-edge rounded-2xl p-8 text-center">
-        <span className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-molten/15 text-molten-bright">
-          <Icon name="check" size={28} />
+      <div className="border border-line bg-surface p-8 text-center sm:p-10">
+        <span className="mx-auto grid h-12 w-12 place-items-center border border-accent text-accent">
+          <Icon name="check" size={24} />
         </span>
-        <h3 className="font-display mt-5 text-2xl text-bone">Request received</h3>
-        <p className="mx-auto mt-3 max-w-md text-pretty text-mist">
+        <h3 className="head-sans mt-6 text-2xl text-ink">Request received</h3>
+        <p className="mx-auto mt-3 max-w-md text-pretty text-ink-2">
           Thanks. We will reach out shortly to set up your free consultation. Need us sooner? Call
           David directly.
         </p>
         <a
           href={site.phoneHref}
-          className="mt-6 inline-flex items-center gap-2 rounded-full border border-molten/40 bg-molten/10 px-5 py-2.5 text-sm font-semibold text-molten-bright"
+          className="mono-label tnum mt-6 inline-flex items-center gap-2 text-ink transition-colors hover:text-accent"
         >
           <Icon name="phone" size={16} /> {site.phone}
         </a>
@@ -78,7 +78,7 @@ export function QuoteForm({ defaultService = "" }: { defaultService?: string }) 
   }
 
   return (
-    <form onSubmit={onSubmit} className="panel rounded-2xl p-6 sm:p-8">
+    <form onSubmit={onSubmit} className="border border-line bg-surface p-6 sm:p-8">
       {/* honeypot */}
       <input type="checkbox" name="botcheck" className="hidden" tabIndex={-1} autoComplete="off" />
 
@@ -140,15 +140,15 @@ export function QuoteForm({ defaultService = "" }: { defaultService?: string }) 
       <button
         type="submit"
         disabled={status === "sending"}
-        className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-6 py-3.5 font-semibold text-white shadow-[var(--shadow-glow)] transition hover:bg-accent-strong disabled:opacity-60"
+        className="group mt-6 inline-flex w-full items-center justify-center gap-2.5 border border-ink bg-ink px-6 py-3.5 text-[0.95rem] font-medium text-paper transition-colors hover:bg-accent hover:border-accent disabled:opacity-60"
       >
         {status === "sending" ? "Sending..." : "Request my free quote"}
         {status !== "sending" ? <Icon name="arrow" size={18} /> : null}
       </button>
 
       {status === "error" ? (
-        <div className="mt-3 flex items-center justify-center gap-2 rounded-xl border border-bone/40 bg-bone/[0.06] px-4 py-3 text-sm text-bone">
-          <Icon name="phone" size={16} className="text-molten-bright" />
+        <div className="mt-3 flex items-center justify-center gap-2 border border-line-2 bg-surface-2 px-4 py-3 text-sm text-ink-2">
+          <Icon name="phone" size={16} className="text-accent" />
           <span>
             Something went wrong. Please call us at{" "}
             <a href={site.phoneHref} className="font-semibold underline">{site.phone}</a>.

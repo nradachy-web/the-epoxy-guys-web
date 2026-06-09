@@ -97,10 +97,9 @@ export function ScrollProgress() {
       aria-hidden
       style={{
         scaleX: reduce ? scrollYProgress : scaleX,
-        background:
-          "linear-gradient(90deg, var(--color-molten-bright), var(--color-ember), var(--color-molten-deep))",
+        background: "var(--color-ink)",
       }}
-      className="fixed left-0 top-0 z-[60] h-[2px] w-full origin-left"
+      className="fixed left-0 top-0 z-[60] h-px w-full origin-left"
     />
   );
 }

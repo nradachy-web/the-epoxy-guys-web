@@ -33,7 +33,7 @@ export default function ServicesPage() {
         ]}
         title={
           <>
-            Every kind of floor coating, <span className="molten-text">done right</span>.
+            Every kind of floor coating, <span className="text-accent">done right</span>.
           </>
         }
         lead="From a one-day garage makeover to a seamless commercial kitchen, we prep it properly and finish it to last. Find the service that fits your space."

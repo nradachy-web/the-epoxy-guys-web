@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Archivo, Hanken_Grotesk } from "next/font/google";
+import { Fraunces, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
@@ -9,17 +9,27 @@ import { JsonLd, localBusinessSchema } from "@/lib/schema";
 import { site } from "@/lib/site";
 import { asset } from "@/lib/asset";
 
-const archivo = Archivo({
+// Fraunces — the one editorial serif voice. Variable axes (opsz, SOFT, WONK)
+// drive optical sizing so large headlines read like a real foundry cut.
+const fraunces = Fraunces({
   subsets: ["latin"],
-  variable: "--font-archivo",
+  variable: "--font-fraunces",
   display: "swap",
-  weight: ["500", "600", "700", "800", "900"],
+  axes: ["opsz", "SOFT", "WONK"],
 });
-const hanken = Hanken_Grotesk({
+// Geist — the deliberate anti-Inter grotesque. The workhorse for ~95% of the page.
+const geist = Geist({
   subsets: ["latin"],
-  variable: "--font-hanken",
+  variable: "--font-geist",
   display: "swap",
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600"],
+});
+// Geist Mono — the engineered voice: every technical label, index, and figure.
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-geist-mono",
+  display: "swap",
+  weight: ["400", "500"],
 });
 
 export const metadata: Metadata = {
@@ -67,14 +77,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${archivo.variable} ${hanken.variable} antialiased`}>
+    <html lang="en" className={`${fraunces.variable} ${geist.variable} ${geistMono.variable} antialiased`}>
       <body className="min-h-screen bg-paper text-ink">
         <JsonLd data={localBusinessSchema()} />
-        <link rel="preload" as="image" href={asset("/photos/hero-main.webp")} type="image/webp" fetchPriority="high" />
+        <link rel="preload" as="image" href={asset("/photos/graded/gallery-real-02.jpg")} type="image/jpeg" fetchPriority="high" />
         <ScrollProgress />
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-accent focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:bg-ink focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-paper"
         >
           Skip to content
         </a>

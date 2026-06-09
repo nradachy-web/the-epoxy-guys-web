@@ -1,45 +1,72 @@
-import { site } from "@/lib/site";
+import { site, googleRating } from "@/lib/site";
 import { asset } from "@/lib/asset";
-import { Button } from "@/components/ui/Button";
-import { Icon } from "@/components/ui/Icons";
+import { Container, SheetHeader } from "@/components/ui/Primitives";
+import { SpecTable } from "@/components/ui/Spec";
 import { Reveal } from "@/components/ui/Reveal";
 
+/**
+ * WARRANTY / SPEC CLOSE — the page closes the way it opened, like a datasheet
+ * footer. A full-width final SPEC TABLE restates the facts, with copper on the
+ * 15 YR figure. One calm conversion path: request a site visit, phone in
+ * tabular figures. No discount banner, no neon button, no sticky nag.
+ */
 export function CtaBand({
-  title = "Ready for a floor built to last?",
-  lead = "Book a free, no-pressure consultation. We will measure your space, talk finishes, and give you an honest quote, usually with a one-day install.",
+  title = "Request a site visit.",
+  lead = "We come to you, measure the slab, talk finishes, and give you an honest number. No pressure, and usually a one-day install.",
 }: {
   title?: string;
   lead?: string;
 }) {
   return (
-    <section className="relative overflow-hidden bg-ink">
-      <div className="absolute inset-0" aria-hidden>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={asset("/photos/cta-dusk.jpg")} alt="" className="h-full w-full object-cover opacity-25" loading="lazy" />
-        <div className="absolute inset-0" style={{ background: "linear-gradient(100deg, rgba(20,22,26,0.94) 0%, rgba(20,22,26,0.82) 55%, rgba(20,22,26,0.7) 100%)" }} />
-        <div className="absolute inset-0" style={{ background: "radial-gradient(50% 60% at 92% 0%, rgba(196,101,26,0.22), transparent 70%)" }} />
-      </div>
-      <div className="relative mx-auto max-w-7xl px-5 py-20 sm:px-8 sm:py-24">
-        <Reveal className="max-w-2xl">
-          <span className="eyebrow inline-flex items-center gap-2 text-accent">
-            <span className="h-px w-7 bg-accent" /> Free consultation
-          </span>
-          <h2 className="font-display mt-4 text-balance text-4xl text-white sm:text-5xl">{title}</h2>
-          <p className="mt-5 text-pretty text-lg leading-relaxed text-white/75">{lead}</p>
-          <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
-            <Button href="/quote" size="lg" icon={<Icon name="arrow" size={18} />}>
-              Get my free quote
-            </Button>
-            <a
-              href={site.phoneHref}
-              className="group inline-flex items-center justify-center gap-2 rounded-full border border-white/25 px-7 py-3.5 text-base font-semibold text-white transition-colors hover:border-white/60 hover:bg-white/5"
-            >
-              <Icon name="phone" size={17} />
-              Call {site.phone}
-            </a>
-          </div>
-        </Reveal>
-      </div>
+    <section className="relative bg-paper py-28 sm:py-36">
+      <Container>
+        <SheetHeader index="08" title="Specification" folio="Datasheet · Summary" />
+
+        <div className="mt-14 grid gap-14 lg:grid-cols-[0.95fr_1.05fr] lg:gap-24">
+          <Reveal>
+            <div>
+              <h2 className="display-h2 text-balance text-ink">{title}</h2>
+              <p className="mt-6 max-w-md text-pretty text-[1.0625rem] leading-relaxed text-ink-2">{lead}</p>
+
+              <div className="mt-9 flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-7">
+                <a
+                  href={asset("/quote/")}
+                  className="group inline-flex items-center justify-center gap-2.5 border border-ink px-6 py-3.5 text-[0.95rem] font-medium text-ink transition-colors hover:border-accent hover:text-accent"
+                >
+                  Request a site visit
+                  <span className="transition-transform duration-300 group-hover:translate-x-[3px]" aria-hidden>→</span>
+                </a>
+                <a href={site.phoneHref} className="mono-label tnum text-ink transition-colors hover:text-accent">
+                  {site.phone}
+                </a>
+              </div>
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.06}>
+            <div>
+              <span className="mono-label">Floor System · Summary</span>
+              <SpecTable
+                className="mt-4"
+                rows={[
+                  { key: "Cure", value: "45 to 60 min" },
+                  { key: "Install", value: "1 day" },
+                  { key: "Warranty", value: `${site.warrantyYears} yr`, accent: true },
+                  { key: "Service Area", value: site.regionShort },
+                  {
+                    key: "Rating",
+                    value: (
+                      <span className="tnum">
+                        {googleRating.score} ★ ({googleRating.count})
+                      </span>
+                    ),
+                  },
+                ]}
+              />
+            </div>
+          </Reveal>
+        </div>
+      </Container>
     </section>
   );
 }

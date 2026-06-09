@@ -1,124 +1,141 @@
-import { site } from "@/lib/site";
+import { site, googleRating } from "@/lib/site";
 import { asset } from "@/lib/asset";
-import { Button } from "@/components/ui/Button";
-import { Icon } from "@/components/ui/Icons";
-import { Reveal } from "@/components/ui/Reveal";
-import { RatingBadge } from "@/components/sections/Testimonials";
+import { SpecTable } from "@/components/ui/Spec";
 
-const badges = [
-  { icon: "clock", label: "One-day install" },
-  { icon: "shield", label: "15-year warranty" },
-  { icon: "user", label: "Owner on every job" },
-  { icon: "check", label: "Free consultation" },
-];
-
+/**
+ * HERO — asymmetric 42 / 58. A calm typographic spec-header on warm paper at
+ * left; a full-bleed, color-graded real Epoxy Guys floor at right, bleeding off
+ * the edge with no frame, no glow, no matte. A single hairline seam runs the
+ * full height where paper meets photo. The review credential hangs in the left
+ * gutter. The orchestrated page-load: a drafting line strikes across the top,
+ * then the type cascades, then the photo settles from 1.04 to 1.0.
+ */
 export function Hero() {
   return (
     <section className="relative overflow-hidden bg-paper">
-      {/* faint warm atmosphere, no flat fill */}
-      <div
-        className="pointer-events-none absolute inset-0"
-        aria-hidden
-        style={{
-          background:
-            "radial-gradient(60% 55% at 88% 8%, rgba(196,101,26,0.07), transparent 70%)",
-        }}
-      />
-      <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-5 pt-28 pb-16 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14 lg:pt-36 lg:pb-24">
-        {/* ---- copy ---- */}
-        <div className="max-w-xl">
-          <Reveal>
-            <span className="eyebrow inline-flex items-center gap-2">
-              <span className="h-px w-7 bg-accent" />
-              {site.regionShort} &middot; Epoxy &amp; concrete coatings
-            </span>
-          </Reveal>
+      {/* full-bleed photo, pinned right, bleeding off the edge */}
+      <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[55%] lg:block">
+        <div className="hero-photo-settle h-full w-full">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={asset("/photos/graded/gallery-real-02.jpg")}
+            alt="A glossy flake epoxy floor by The Epoxy Guys with a mirror-like reflection, in a Genesee County garage"
+            width={1400}
+            height={1900}
+            className="h-full w-full object-cover"
+            fetchPriority="high"
+          />
+        </div>
+        {/* the seam: a single hairline where paper meets photo */}
+        <span className="absolute inset-y-0 left-0 w-px bg-line-2" aria-hidden />
+        {/* let the paper feather into the photo so type never collides */}
+        <span
+          className="absolute inset-y-0 left-0 w-40"
+          aria-hidden
+          style={{ background: "linear-gradient(to right, var(--color-paper), transparent)" }}
+        />
+      </div>
 
-          <Reveal delay={0.06}>
-            <h1 className="font-display mt-5 text-balance text-[2.7rem] leading-[0.98] text-ink sm:text-6xl md:text-[4.1rem]">
-              Epoxy floors that look like <span className="text-accent">glass</span>, installed in a day.
-            </h1>
-          </Reveal>
-
-          <Reveal delay={0.12}>
-            <p className="mt-6 max-w-lg text-pretty text-lg leading-relaxed text-ink-2">
-              From cracked, oil-stained concrete to a showroom floor you are proud to leave open. Our
-              polyaspartic systems cure in {site.cure}, so most garages, basements, and shops are done in a
-              single day, and backed for {site.warrantyYears} years.
-            </p>
-          </Reveal>
-
-          <Reveal delay={0.18}>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <Button href="/quote" size="lg" icon={<Icon name="arrow" size={18} />}>
-                Get my free quote
-              </Button>
-              <Button href={site.phoneHref} variant="phone" size="lg" icon={<Icon name="phone" size={17} />}>
-                {site.phone}
-              </Button>
-            </div>
-          </Reveal>
-
-          <Reveal delay={0.24}>
-            <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
-              <RatingBadge />
-              <span className="text-sm font-medium text-muted">Owner-operated in {site.address.city}, MI</span>
-            </div>
-          </Reveal>
-
-          <Reveal delay={0.3}>
-            <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-3 border-t border-line pt-7">
-              {badges.map((b) => (
-                <li key={b.label} className="flex items-center gap-2 text-sm font-semibold text-ink-2">
-                  <span className="grid h-7 w-7 place-items-center rounded-full bg-accent-tint text-accent">
-                    <Icon name={b.icon} size={15} />
-                  </span>
-                  {b.label}
-                </li>
-              ))}
-            </ul>
-          </Reveal>
+      <div className="relative mx-auto max-w-7xl px-6 sm:px-10">
+        {/* the title-block hairline + mono eyebrow that strikes across on load */}
+        <div className="relative pt-28 lg:pt-32">
+          <span className="hero-rule block h-px w-full bg-ink/70" aria-hidden />
+          <p className="hero-settle mono-label mt-4" style={{ animationDelay: "0.45s" }}>
+            Polyaspartic Floor System · {site.address.city}, Michigan
+          </p>
         </div>
 
-        {/* ---- photo ---- */}
-        <Reveal delay={0.12} className="relative">
-          <div className="relative">
-            <div className="overflow-hidden rounded-3xl border border-line-2 bg-white p-2 shadow-[var(--shadow-lift)]">
-              <picture>
-                <source
-                  type="image/webp"
-                  srcSet={`${asset("/photos/hero-main-1280.webp")} 1280w, ${asset("/photos/hero-main.webp")} 1920w`}
-                  sizes="(min-width: 1024px) 46vw, 100vw"
-                />
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={asset("/photos/hero-main.jpg")}
-                  alt="Finished two-car garage with a glossy flake epoxy floor in Genesee County, Michigan"
-                  width={1920}
-                  height={1080}
-                  className="aspect-[4/3] w-full rounded-2xl object-cover"
-                  fetchPriority="high"
-                />
-              </picture>
+        <div className="relative grid items-start gap-16 pb-24 pt-10 lg:grid-cols-[42%_58%] lg:pb-36">
+          {/* ---- left: the spec header ---- */}
+          <div className="relative max-w-[34rem]">
+            {/* review credential hung in the left gutter, vertical mono string */}
+            <a
+              href={googleRating.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${googleRating.score} out of 5 from ${googleRating.count} Google reviews`}
+              className="absolute -left-10 top-1 hidden text-muted transition-colors hover:text-ink xl:block"
+              style={{ writingMode: "vertical-rl" }}
+            >
+              <span className="mono-label tnum tracking-[0.2em]">
+                {googleRating.score} / {googleRating.count} Google Reviews
+              </span>
+            </a>
+
+            <h1 className="hero-settle display-xl mt-2 text-balance text-ink" style={{ animationDelay: "0.55s" }}>
+              Coated in a day.
+              <br />
+              Built to last{" "}
+              <span className="whitespace-nowrap">
+                <span className="tnum">fifteen</span>
+              </span>{" "}
+              years.
+            </h1>
+
+            <p
+              className="hero-settle mt-7 max-w-[52ch] text-pretty text-[1.0625rem] leading-relaxed text-ink-2"
+              style={{ animationDelay: "0.62s" }}
+            >
+              We grind your slab to bare concrete, repair every crack, and pour a polyaspartic system
+              that cures in under an hour. You park on it the same day.
+            </p>
+
+            {/* the signature spec table — replaces the badge wall and proof card */}
+            <div className="hero-settle mt-9" style={{ animationDelay: "0.7s" }}>
+              <SpecTable
+                rows={[
+                  { key: "Cure", value: "45 to 60 min" },
+                  { key: "Install", value: "1 day" },
+                  { key: "Warranty", value: "15 yr", accent: true },
+                  {
+                    key: "Rating",
+                    value: (
+                      <span className="tnum">
+                        {googleRating.score} ★ ({googleRating.count})
+                      </span>
+                    ),
+                  },
+                ]}
+              />
             </div>
 
-            {/* honest caption chip */}
-            <span className="absolute left-5 top-5 rounded-full bg-white/92 px-3.5 py-1.5 text-xs font-semibold text-ink shadow-[var(--shadow-soft)] backdrop-blur">
-              Real customer floor
-            </span>
-
-            {/* floating proof card */}
-            <div className="absolute -bottom-5 -left-3 hidden items-center gap-3 rounded-2xl border border-line bg-white px-4 py-3 shadow-[var(--shadow-lift)] sm:flex">
-              <span className="grid h-11 w-11 place-items-center rounded-xl bg-ink text-white">
-                <Icon name="clock" size={20} />
-              </span>
-              <span className="leading-tight">
-                <span className="block font-display text-lg text-ink">Done in a day</span>
-                <span className="block text-xs text-muted">Cures in {site.cure}</span>
-              </span>
+            {/* one calm CTA + tabular phone */}
+            <div
+              className="hero-settle mt-9 flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-7"
+              style={{ animationDelay: "0.78s" }}
+            >
+              <a
+                href={asset("/quote/")}
+                className="group inline-flex items-center justify-center gap-2.5 border border-ink bg-transparent px-6 py-3.5 text-[0.95rem] font-medium text-ink transition-colors hover:border-accent hover:text-accent"
+              >
+                Request a site visit
+                <span className="transition-transform duration-300 group-hover:translate-x-[3px]" aria-hidden>
+                  →
+                </span>
+              </a>
+              <a
+                href={site.phoneHref}
+                className="mono-label tnum text-ink transition-colors hover:text-accent"
+              >
+                {site.phone}
+              </a>
             </div>
           </div>
-        </Reveal>
+
+          {/* right column spacer on desktop (photo is the absolute layer);
+              on mobile the graded wide crop stacks below */}
+          <div className="lg:hidden">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={asset("/photos/graded/gallery-real-02.jpg")}
+              alt="A glossy flake epoxy floor by The Epoxy Guys with a mirror-like reflection"
+              width={1400}
+              height={933}
+              className="aspect-[3/2] w-full object-cover"
+            />
+            <p className="plate-caption mt-3">00 / Burton, MI · FS-01 Flake / Polyaspartic · 2025</p>
+          </div>
+        </div>
       </div>
     </section>
   );

@@ -30,7 +30,7 @@ export default function QuotePage() {
         ]}
         title={
           <>
-            Get your free, no-pressure <span className="molten-text">quote</span>.
+            Get your free, no-pressure <span className="text-accent">quote</span>.
           </>
         }
         lead="A few quick details is all we need. We will reach out to schedule a free on-site consultation, bring samples, and give you an honest price."
@@ -43,24 +43,40 @@ export default function QuotePage() {
               <QuoteForm />
             </div>
             <aside className="lg:order-first">
-              <h2 className="font-display text-2xl text-bone">What to expect</h2>
-              <ul className="mt-6 space-y-5">
-                {valueProps.map((v) => (
-                  <li key={v.label} className="flex gap-4">
-                    <span className="mt-0.5 grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-molten/25 bg-molten/10 text-molten-bright">
-                      <Icon name={v.icon} size={19} />
+              <div className="border-t border-line pt-4">
+                <span className="index-label">
+                  01 <span className="text-muted">/ What to expect</span>
+                </span>
+              </div>
+              <ul className="mt-10">
+                {valueProps.map((v, i) => (
+                  <li
+                    key={v.label}
+                    className="flex gap-5 border-t border-line py-6 first:border-t-0 first:pt-0"
+                  >
+                    <span className="mono-label tnum mt-1 shrink-0 text-muted">
+                      0{i + 1}
                     </span>
-                    <div>
-                      <h3 className="font-display text-lg text-bone">{v.label}</h3>
-                      <p className="mt-1 text-sm leading-relaxed text-ash">{v.detail}</p>
+                    <div className="flex-1">
+                      <div className="flex items-baseline gap-2.5">
+                        <Icon name={v.icon} size={17} className="shrink-0 translate-y-0.5 text-accent" />
+                        <h3 className="head-sans text-[1.05rem] text-ink">{v.label}</h3>
+                      </div>
+                      <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-2">{v.detail}</p>
                     </div>
                   </li>
                 ))}
               </ul>
-              <div className="mt-8 rounded-2xl border border-molten/20 bg-molten/[0.06] p-6">
-                <p className="text-sm text-mist">Prefer to talk it through? Call David directly.</p>
-                <a href={site.phoneHref} className="mt-2 flex items-center gap-2 font-display text-2xl text-bone hover:text-molten-bright">
-                  <Icon name="phone" size={20} className="text-molten" /> {site.phone}
+              <div className="mt-10 border border-line bg-surface p-6">
+                <p className="mono-label">Prefer to talk it through</p>
+                <p className="mt-3 text-[0.95rem] leading-relaxed text-ink-2">
+                  Call David directly for an honest read on your space.
+                </p>
+                <a
+                  href={site.phoneHref}
+                  className="mono-label tnum mt-4 inline-flex items-center gap-2 text-ink transition-colors hover:text-accent"
+                >
+                  <Icon name="phone" size={16} /> {site.phone}
                 </a>
               </div>
             </aside>

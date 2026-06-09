@@ -1,7 +1,11 @@
 import { faqs as allFaqs } from "@/lib/site";
-import { Container, Section, SectionHeading } from "@/components/ui/Primitives";
-import { Icon } from "@/components/ui/Icons";
+import { Container } from "@/components/ui/Primitives";
 
+/**
+ * FAQ — a quiet ruled register. Hairlines and mono indices carry it; no cards,
+ * no colored chevron pills. Each row opens plainly. Native <details> so it
+ * works without JS and respects reduced motion.
+ */
 export function FaqSection({
   faqs = allFaqs,
   heading = true,
@@ -12,33 +16,35 @@ export function FaqSection({
   className?: string;
 }) {
   return (
-    <Section className={className} id="faq">
+    <section className={`relative bg-paper py-28 sm:py-36 ${className}`} id="faq">
       <Container className="max-w-3xl">
         {heading ? (
-          <SectionHeading
-            align="center"
-            eyebrow="Good questions"
-            title={
-              <>
-                Everything you want to know, <span className="molten-text">answered</span>.
-              </>
-            }
-          />
+          <div className="border-t border-line pt-4">
+            <span className="mono-label">07 / Questions</span>
+            <h2 className="head-sans mt-4 text-balance text-[1.9rem] text-ink sm:text-[2.4rem]">
+              The things worth asking, answered plainly.
+            </h2>
+          </div>
         ) : null}
-        <div className="mt-10 divide-y divide-line border-y border-line">
-          {faqs.map((f) => (
-            <details key={f.q} className="group py-2">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-4 text-left">
-                <span className="font-display text-lg text-bone">{f.q}</span>
-                <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-line text-molten-bright transition-transform group-open:rotate-45">
-                  <Icon name="close" size={16} className="rotate-45" />
+
+        <div className="mt-12">
+          {faqs.map((f, i) => (
+            <details key={f.q} className="group border-t border-line last:border-b">
+              <summary className="flex cursor-pointer list-none items-baseline gap-4 py-5 text-left">
+                <span className="mono-label tnum mt-0.5">{String(i + 1).padStart(2, "0")}</span>
+                <span className="head-sans flex-1 text-[1.05rem] text-ink">{f.q}</span>
+                <span
+                  className="mono-label shrink-0 text-muted transition-transform duration-300 group-open:rotate-45"
+                  aria-hidden
+                >
+                  +
                 </span>
               </summary>
-              <p className="pb-5 pr-2 text-pretty leading-relaxed text-ash sm:pr-12">{f.a}</p>
+              <p className="pb-6 pl-[2.6rem] pr-2 text-pretty leading-relaxed text-ink-2">{f.a}</p>
             </details>
           ))}
         </div>
       </Container>
-    </Section>
+    </section>
   );
 }

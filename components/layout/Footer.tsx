@@ -1,38 +1,60 @@
 import Link from "next/link";
-import { finishes, services, serviceAreas, site } from "@/lib/site";
+import { services, serviceAreas, site } from "@/lib/site";
 import { Logo } from "@/components/ui/Logo";
-import { Icon } from "@/components/ui/Icons";
 
+/**
+ * CONTACT / FOOTER — one cohesive close. One phone number, one address, the
+ * four-word nav echoed as a sheet index, and the inner-page links demoted to
+ * a quiet register. No duplicated nav bars, no bolted-on social-icon soup.
+ */
 export function Footer() {
   const year = 2026;
   return (
-    <footer className="relative border-t border-line bg-surface-2">
-      <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8">
-        <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
+    <footer id="contact" className="relative border-t border-line bg-surface-2">
+      <div className="mx-auto max-w-7xl px-6 py-20 sm:px-10 sm:py-24">
+        <span className="mono-label">Contact · The Epoxy Guys</span>
+
+        <div className="mt-8 grid gap-14 lg:grid-cols-[1.5fr_1fr_1fr] lg:gap-20">
+          {/* identity + the one set of contact facts */}
           <div>
-            <Logo size={72} variant="stacked" />
-            <p className="mt-5 max-w-xs text-pretty text-sm leading-relaxed text-ash">
-              {site.trademark} are {site.regionShort}&apos;s owner-operated epoxy and concrete
-              coating specialists. One-day floors, done right, backed for {site.warrantyYears} years.
+            <Logo size={56} variant="stacked" />
+            <p className="mt-6 max-w-xs text-pretty leading-relaxed text-ink-2">
+              {site.regionShort}&rsquo;s owner-operated epoxy and concrete coating specialists.
+              One-day floors, prepped right, backed for {site.warrantyYears} years.
             </p>
-            <div className="mt-6 space-y-2.5 text-sm">
-              <a href={site.phoneHref} className="flex items-center gap-2.5 text-bone hover:text-molten-bright">
-                <Icon name="phone" size={16} className="text-molten" /> {site.phone}
-              </a>
-              <a href={site.emailHref} className="flex items-center gap-2.5 text-mist hover:text-bone">
-                <Icon name="check" size={16} className="text-molten" /> {site.email}
-              </a>
-              <p className="flex items-center gap-2.5 text-mist">
-                <Icon name="pin" size={16} className="text-molten" /> {site.address.full}
-              </p>
-              <p className="flex items-center gap-2.5 text-mist">
-                <Icon name="clock" size={16} className="text-molten" /> {site.hours}
-              </p>
-            </div>
+
+            <dl className="mt-8 space-y-3 border-t border-line pt-6">
+              <div className="flex items-baseline gap-4">
+                <dt className="mono-label w-20 shrink-0">Phone</dt>
+                <dd>
+                  <a href={site.phoneHref} className="tnum link-underline text-ink">
+                    {site.phone}
+                  </a>
+                </dd>
+              </div>
+              <div className="flex items-baseline gap-4">
+                <dt className="mono-label w-20 shrink-0">Email</dt>
+                <dd>
+                  <a href={site.emailHref} className="link-underline text-ink">
+                    {site.email}
+                  </a>
+                </dd>
+              </div>
+              <div className="flex items-baseline gap-4">
+                <dt className="mono-label w-20 shrink-0">Shop</dt>
+                <dd className="tnum text-ink">{site.address.full}</dd>
+              </div>
+              <div className="flex items-baseline gap-4">
+                <dt className="mono-label w-20 shrink-0">Hours</dt>
+                <dd className="text-ink">{site.hours}</dd>
+              </div>
+            </dl>
           </div>
 
-          <FooterCol title="Services" links={services.map((s) => ({ label: s.navLabel, href: `/services/${s.slug}` }))} />
-          <FooterCol title="Finishes" links={finishes.slice(0, 6).map((f) => ({ label: f.name, href: `/finishes#${f.slug}` }))} />
+          <FooterCol
+            title="System"
+            links={services.slice(0, 6).map((s) => ({ label: s.navLabel, href: `/services/${s.slug}` }))}
+          />
           <FooterCol
             title="Service Area"
             links={[
@@ -42,21 +64,32 @@ export function Footer() {
           />
         </div>
 
-        <div className="mt-14 flex flex-col items-start justify-between gap-4 border-t border-line pt-7 text-sm text-ash sm:flex-row sm:items-center">
-          <p>
-            &copy; {year} {site.trademark}. All rights reserved.
+        <div className="mt-16 flex flex-col items-start justify-between gap-4 border-t border-line pt-7 sm:flex-row sm:items-center">
+          <p className="mono-label">
+            © {year} {site.trademark}
           </p>
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
-            <Link href="/faq" className="hover:text-mist">FAQ</Link>
-            <Link href="/contact" className="hover:text-mist">Contact</Link>
-            <a href={site.facebook} className="hover:text-mist" rel="noopener noreferrer" target="_blank">Facebook</a>
+          <div className="flex flex-wrap items-center gap-x-7 gap-y-2">
+            <Link href="/faq" className="mono-label text-muted transition-colors hover:text-ink">
+              FAQ
+            </Link>
+            <Link href="/finishes" className="mono-label text-muted transition-colors hover:text-ink">
+              Finishes
+            </Link>
+            <a
+              href={site.facebook}
+              rel="noopener noreferrer"
+              target="_blank"
+              className="mono-label text-muted transition-colors hover:text-ink"
+            >
+              Facebook
+            </a>
             <a
               href="https://modernapexstrategies.com"
               rel="noopener noreferrer"
               target="_blank"
-              className="text-ash hover:text-mist"
+              className="mono-label text-muted transition-colors hover:text-ink"
             >
-              Site by Modern Apex Strategies
+              Modern Apex
             </a>
           </div>
         </div>
@@ -68,11 +101,11 @@ export function Footer() {
 function FooterCol({ title, links }: { title: string; links: { label: string; href: string }[] }) {
   return (
     <div>
-      <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-bone">{title}</h3>
-      <ul className="mt-4 space-y-2.5">
+      <h3 className="mono-label">{title}</h3>
+      <ul className="mt-5 space-y-3 border-t border-line pt-5">
         {links.map((l) => (
           <li key={l.href + l.label}>
-            <Link href={l.href} className="text-sm text-ash transition-colors hover:text-molten-bright">
+            <Link href={l.href} className="text-[0.95rem] text-ink-2 transition-colors hover:text-accent">
               {l.label}
             </Link>
           </li>

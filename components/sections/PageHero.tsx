@@ -1,9 +1,13 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { asset } from "@/lib/asset";
-import { Icon } from "@/components/ui/Icons";
 import { Reveal } from "@/components/ui/Reveal";
 
+/**
+ * PAGE HERO — the inner-page title block, set like the cover of a drawing sheet:
+ * a hairline rule, a mono folio/breadcrumb, a calm head-sans title, and (when
+ * given) a single squared plate. No rounded cards, no matte, no lift shadow.
+ */
 export function PageHero({
   eyebrow,
   title,
@@ -21,69 +25,68 @@ export function PageHero({
 }) {
   return (
     <section className="relative overflow-hidden border-b border-line bg-paper">
-      {/* faint warm atmosphere */}
-      <div
-        className="pointer-events-none absolute inset-0"
-        aria-hidden
-        style={{ background: "radial-gradient(55% 60% at 92% 0%, rgba(196,101,26,0.07), transparent 70%)" }}
-      />
-      <div
-        className={`relative mx-auto grid max-w-7xl items-center gap-10 px-5 pt-32 pb-14 sm:px-8 sm:pt-36 sm:pb-[4.5rem] ${
-          image ? "lg:grid-cols-[1.1fr_0.9fr] lg:gap-14" : ""
-        }`}
-      >
-        <div>
-          {breadcrumb ? (
-            <Reveal>
-              <nav aria-label="Breadcrumb" className="mb-6 flex flex-wrap items-center gap-1.5 text-xs text-muted">
+      <div className="relative mx-auto max-w-7xl px-6 sm:px-10">
+        <div className="pt-32 sm:pt-36">
+          <span className="block h-px w-full bg-ink/70" aria-hidden />
+          <Reveal>
+            {breadcrumb ? (
+              <nav aria-label="Breadcrumb" className="mono-label mt-4 flex flex-wrap items-center gap-2 text-muted">
                 {breadcrumb.map((b, i) => (
-                  <span key={b.href} className="flex items-center gap-1.5">
-                    {i > 0 ? <Icon name="chevron" size={12} className="-rotate-90 text-faint-2" /> : null}
+                  <span key={b.href} className="flex items-center gap-2">
+                    {i > 0 ? <span aria-hidden className="text-faint-2">/</span> : null}
                     {i < breadcrumb.length - 1 ? (
-                      <Link href={b.href} className="transition-colors hover:text-accent">{b.name}</Link>
+                      <Link href={b.href} className="transition-colors hover:text-accent">
+                        {b.name}
+                      </Link>
                     ) : (
                       <span className="text-ink-2">{b.name}</span>
                     )}
                   </span>
                 ))}
               </nav>
-            </Reveal>
-          ) : null}
-
-          <Reveal delay={0.05}>
-            {eyebrow ? (
-              <span className="eyebrow inline-flex items-center gap-2">
-                <span className="h-px w-7 bg-accent" /> {eyebrow}
-              </span>
+            ) : eyebrow ? (
+              <p className="mono-label mt-4">{eyebrow}</p>
             ) : null}
           </Reveal>
-          <Reveal delay={0.1}>
-            <h1 className="font-display mt-4 max-w-3xl text-balance text-4xl leading-[1.02] text-ink sm:text-5xl md:text-[3.4rem]">
-              {title}
-            </h1>
-          </Reveal>
-          {lead ? (
-            <Reveal delay={0.16}>
-              <p className="mt-5 max-w-2xl text-pretty text-lg leading-relaxed text-ink-2">{lead}</p>
-            </Reveal>
-          ) : null}
-          {children ? <Reveal delay={0.22}>{children}</Reveal> : null}
         </div>
 
-        {image ? (
-          <Reveal delay={0.12} className="hidden lg:block">
-            <div className="overflow-hidden rounded-3xl border border-line-2 bg-white p-2 shadow-[var(--shadow-lift)]">
+        <div
+          className={`grid items-end gap-12 pb-20 pt-10 sm:pb-24 sm:pt-12 ${
+            image ? "lg:grid-cols-[1fr_0.82fr] lg:gap-16" : ""
+          }`}
+        >
+          <div>
+            {breadcrumb && eyebrow ? (
+              <Reveal delay={0.04}>
+                <p className="mono-label">{eyebrow}</p>
+              </Reveal>
+            ) : null}
+            <Reveal delay={0.06}>
+              <h1 className="head-sans mt-3 max-w-3xl text-balance text-[2.4rem] leading-[1.04] text-ink sm:text-5xl md:text-[3.3rem]">
+                {title}
+              </h1>
+            </Reveal>
+            {lead ? (
+              <Reveal delay={0.12}>
+                <p className="mt-6 max-w-2xl text-pretty text-[1.0625rem] leading-relaxed text-ink-2">{lead}</p>
+              </Reveal>
+            ) : null}
+            {children ? <Reveal delay={0.18}>{children}</Reveal> : null}
+          </div>
+
+          {image ? (
+            <Reveal delay={0.1} className="hidden lg:block">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={asset(image)}
                 alt=""
                 aria-hidden
-                className="aspect-[4/3] w-full rounded-2xl object-cover"
+                className="aspect-[4/3] w-full object-cover"
                 fetchPriority="high"
               />
-            </div>
-          </Reveal>
-        ) : null}
+            </Reveal>
+          ) : null}
+        </div>
       </div>
     </section>
   );

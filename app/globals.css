@@ -1,39 +1,44 @@
 @import "tailwindcss";
 
 /* ============================================================
-   THE EPOXY GUYS — "Showroom" design system
-   Bright, honest, premium-industrial. Warm paper, real photos
-   at full brightness, one confident amber accent. Built to look
-   like a real Genesee County crew, not a SaaS landing page.
+   THE EPOXY GUYS — "Engineered Precision"
+   A spec sheet, not a brochure. Warm cured-concrete paper,
+   ink, and copper rationed to a handful of places. Hairline
+   rules carry the structure; cards are gone. Three faces,
+   each with one job: Fraunces (serif, ~4 moments only),
+   Geist (the workhorse), Geist Mono (technical labels).
+   Measured, not marketed.
    ============================================================ */
 
 @theme {
-  /* ---- light base (warm paper + clean white) ---- */
-  --color-paper: #fbfaf6;
-  --color-surface: #ffffff;
-  --color-surface-2: #f3f0e8;
-  --color-surface-3: #ece8dd;
+  /* ---- ground: cured-concrete bone + clean surface ---- */
+  --color-paper: #f4f0e8;
+  --color-surface: #faf8f2;
+  --color-surface-2: #ece7db;
+  --color-surface-3: #e2dccd;
 
-  /* ---- ink (warm near-black) ---- */
+  /* ---- ink (warm near-black) + the secondary ink ladder ---- */
   --color-ink: #181a1e;
   --color-ink-2: #474c54;
-  --color-muted: #767b83;
-  --color-faint-2: #a8abb1;
+  --color-muted: #5f646c;
+  --color-faint-2: #9a9c9f;
 
-  /* ---- warm hairlines ---- */
-  --color-line: #e7e2d7;
-  --color-line-2: #d8d2c4;
+  /* ---- hairlines: the only structure now that cards are gone ---- */
+  --color-line: #ddd6c7;
+  --color-line-2: #cdc4b1;
 
-  /* ---- the one accent: burnt amber (matches flake + metallic floors) ---- */
-  --color-accent: #c4651a;
-  --color-accent-strong: #a3500f;
-  --color-accent-tint: #fbeedd;
+  /* ---- the one accent: copper, re-grounded from the real flake floor.
+          Rationed to ~3 places on the whole homepage. ---- */
+  --color-accent: #b65e1a;
+  --color-accent-strong: #99500f;
+  --color-accent-tint: #f0e4d4;
   --color-accent-ink: #6e3608;
 
   /* ============================================================
      Legacy token remap. The inner pages were built on a dark
-     palette; mapping the old names onto the light system keeps
-     them coherent until each gets its own polish pass.
+     palette and then a light one; mapping the old names onto
+     the Engineered Precision system keeps them coherent until
+     each gets its own pass.
      ============================================================ */
   --color-void: var(--color-paper);
   --color-graphite: var(--color-paper);
@@ -52,14 +57,17 @@
   --color-steel: var(--color-muted);
   --color-steel-deep: var(--color-ink-2);
 
-  --font-display: var(--font-archivo), "Helvetica Neue", Arial, sans-serif;
-  --font-sans: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
+  /* ---- type families ---- */
+  --font-display: var(--font-fraunces), "Iowan Old Style", Georgia, serif;
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, monospace;
 
-  --shadow-soft: 0 1px 2px rgba(24, 26, 30, 0.05), 0 12px 30px -18px rgba(24, 26, 30, 0.2);
-  --shadow-lift: 0 2px 6px rgba(24, 26, 30, 0.06), 0 28px 60px -28px rgba(24, 26, 30, 0.26);
-  --shadow-glow: 0 12px 30px -12px rgba(196, 101, 26, 0.4);
+  /* ---- shadows: nearly none. A spec sheet has no lift. ---- */
+  --shadow-soft: 0 1px 0 rgba(24, 26, 30, 0.04);
+  --shadow-lift: 0 1px 0 rgba(24, 26, 30, 0.05);
+  --shadow-glow: none;
 
-  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
@@ -95,6 +103,7 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
+  font-feature-settings: "ss01", "cv01";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -102,32 +111,120 @@ body {
 }
 
 ::selection {
-  background: var(--color-accent);
-  color: #fff;
+  background: var(--color-ink);
+  color: var(--color-paper);
 }
 
-/* ---- typography ---- */
+/* ============================================================
+   NAMED TYPE UTILITIES — tracking + line-height baked in so the
+   two-size-per-screen discipline and serif scarcity survive onto
+   inner pages and AI defaults can't creep back. Honest modular
+   scale (~1.333), few sizes, repeated steps.
+   ============================================================ */
+
+/* the one serif voice — Fraunces, driven optical size, ~4 uses MAX */
 .font-display {
   font-family: var(--font-display);
-  font-weight: 800;
-  letter-spacing: -0.022em;
-  line-height: 1;
+  font-weight: 600;
+  font-variation-settings: "opsz" 120, "SOFT" 0, "WONK" 0;
+  letter-spacing: -0.025em;
+  line-height: 0.98;
+  font-feature-settings: "ss01";
 }
+
+.display-xl {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 144, "SOFT" 4, "WONK" 0;
+  font-size: clamp(2.85rem, 6.4vw, 5.1rem);
+  letter-spacing: -0.028em;
+  line-height: 0.96;
+}
+
+.display-h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 96, "SOFT" 2, "WONK" 0;
+  font-size: clamp(1.9rem, 3.6vw, 2.75rem);
+  letter-spacing: -0.02em;
+  line-height: 1.04;
+}
+
+.display-quote {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 72, "SOFT" 6, "WONK" 0;
+  letter-spacing: -0.014em;
+  line-height: 1.18;
+}
+
+/* the grotesque workhorse subhead (NOT serif) */
+.head-sans {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+
 .text-balance {
   text-wrap: balance;
 }
 .text-pretty {
   text-wrap: pretty;
-}
-.eyebrow {
-  font-size: 0.73rem;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--color-accent);
+  max-width: 64ch;
 }
 
-/* accent word inside a headline — flat amber, no chrome gradients */
+/* the engineered voice — small mono labels, tracked, uppercase */
+.mono-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* section index hung at the left of each sheet: "02 — THE SYSTEM" */
+.index-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* photo-plate caption: NN — TOWN, MI · SYSTEM · YEAR */
+.plate-caption {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 450;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  font-variant-numeric: tabular-nums lining-nums;
+  line-height: 1.4;
+}
+
+/* legacy eyebrow kept for inner pages — re-skinned to mono, ink not amber */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+/* every figure on the page locks to a tabular axis like a datasheet */
+.tnum {
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum", "lnum";
+}
+
+/* accent word inside a headline — flat copper, no chrome gradients */
 .molten-text,
 .chrome-text {
   color: var(--color-accent);
@@ -135,27 +232,86 @@ body {
   background: none;
 }
 
-/* ---- surfaces ---- */
+/* ============================================================
+   THE SPEC TABLE — the page's recurring trust DNA.
+   Borderless, rows separated by 1px hairlines, mono label left,
+   tabular figure right, a dot-leader bridging them. Copper on
+   exactly one figure, nowhere else.
+   ============================================================ */
+.spec-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.spec-row {
+  display: grid;
+  grid-template-columns: minmax(0, auto) 1fr minmax(0, auto);
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.85rem 0;
+  border-top: 1px solid var(--color-line);
+}
+.spec-row:last-child {
+  border-bottom: 1px solid var(--color-line);
+}
+.spec-key {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  white-space: nowrap;
+}
+/* the classic spec-sheet dot-leader — drawn with a repeating mask so it
+   animates left-to-right on reveal */
+.spec-leader {
+  position: relative;
+  align-self: center;
+  height: 1px;
+  margin-bottom: 0.2em;
+  overflow: hidden;
+}
+.spec-leader::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, var(--color-line-2) 0.6px, transparent 0.7px);
+  background-size: 6px 1px;
+  background-position: left center;
+  background-repeat: repeat-x;
+}
+.spec-val {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-ink);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum", "lnum";
+}
+.spec-val--accent {
+  color: var(--color-accent);
+}
+
+/* ---- surfaces (mostly unused now; cards are gone) ---- */
 .glass {
-  background: color-mix(in oklab, white 82%, transparent);
-  backdrop-filter: saturate(125%) blur(12px);
-  -webkit-backdrop-filter: saturate(125%) blur(12px);
+  background: color-mix(in oklab, var(--color-paper) 86%, transparent);
+  backdrop-filter: saturate(118%) blur(10px);
+  -webkit-backdrop-filter: saturate(118%) blur(10px);
 }
 .panel {
   background: var(--color-surface);
   border: 1px solid var(--color-line);
-  box-shadow: var(--shadow-soft);
 }
 .hairline {
-  border: 1px solid color-mix(in oklab, var(--color-ink) 8%, transparent);
+  border: 1px solid var(--color-line);
 }
 
-/* graph-paper texture for occasional industrial accent panels */
+/* the blueprint graph-paper texture is intentionally dropped — warmth
+   comes from real photography + bone paper + whitespace, never an
+   added industrial graphic. Kept as a no-op so any stray class is inert. */
 .blueprint {
-  background-image:
-    linear-gradient(color-mix(in oklab, var(--color-ink) 4%, transparent) 1px, transparent 1px),
-    linear-gradient(90deg, color-mix(in oklab, var(--color-ink) 4%, transparent) 1px, transparent 1px);
-  background-size: 26px 26px;
+  background-image: none;
 }
 
 /* neutralized legacy effects (no chrome sweep, glow border, or grain) */
@@ -171,19 +327,77 @@ body {
   mask-image: linear-gradient(to bottom, #000 0%, #000 64%, transparent 100%);
 }
 
-/* link underline grow */
+/* link underline grow — the one considered hover */
 .link-underline {
   background-image: linear-gradient(currentColor, currentColor);
-  background-size: 0% 1.5px;
+  background-size: 0% 1px;
   background-repeat: no-repeat;
   background-position: 0 100%;
   transition: background-size 0.3s var(--ease-out-soft);
 }
 .link-underline:hover {
-  background-size: 100% 1.5px;
+  background-size: 100% 1px;
 }
 
-/* ---- marquee fallback keyframe (component may still use it elsewhere) ---- */
+/* ---- the one orchestrated page-load: a drafting line struck across
+        the hero, then a tight staggered cascade ---- */
+@keyframes rule-strike {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes settle-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes hero-scale-settle {
+  from {
+    transform: scale(1.04);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+@keyframes leader-draw {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.hero-rule {
+  transform-origin: left center;
+  animation: rule-strike 0.55s var(--ease-out-soft) both;
+}
+.hero-settle {
+  animation: settle-up 0.6s var(--ease-out-soft) both;
+}
+.hero-photo-settle {
+  animation: hero-scale-settle 0.9s var(--ease-out-soft) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-rule,
+  .hero-settle,
+  .hero-photo-settle {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ---- marquee fallback keyframe (component may still use it) ---- */
 @keyframes marquee {
   from {
     transform: translateX(0);

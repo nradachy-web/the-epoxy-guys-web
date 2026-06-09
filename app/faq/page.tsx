@@ -32,7 +32,7 @@ export default function FaqPage() {
         ]}
         title={
           <>
-            The answers before you <span className="molten-text">ask</span>.
+            The answers before you <span className="text-accent">ask</span>.
           </>
         }
         lead={`Still have a question after reading these? Call us anytime at ${site.phone}.`}

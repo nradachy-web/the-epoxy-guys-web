@@ -15,8 +15,8 @@ import { JsonLd, breadcrumbSchema, faqSchema, serviceSchema } from "@/lib/schema
 import { PageHero } from "@/components/sections/PageHero";
 import { FaqSection } from "@/components/sections/FaqSection";
 import { CtaBand } from "@/components/sections/CtaBand";
-import { Container, Section, SectionHeading } from "@/components/ui/Primitives";
-import { Button } from "@/components/ui/Button";
+import { Container, Section, SheetHeader } from "@/components/ui/Primitives";
+import { SpecTable } from "@/components/ui/Spec";
 import { Icon } from "@/components/ui/Icons";
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/Reveal";
 import { Parallax } from "@/components/ui/Motion";
@@ -55,7 +55,7 @@ const guarantees = [
 
 function Stars() {
   return (
-    <div className="flex gap-0.5 text-molten-bright" aria-label="5 out of 5 stars">
+    <div className="flex gap-0.5 text-accent" aria-label="5 out of 5 stars">
       {Array.from({ length: 5 }).map((_, i) => (
         <svg key={i} width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
           <path d="M12 3l2.6 5.5 6 .8-4.4 4.2 1.1 6L12 16.8 6.7 19.5l1.1-6L3.4 9.3l6-.8z" />
@@ -110,97 +110,108 @@ export default async function ServiceDetail({
         lead={service.intro}
         image={service.image}
       >
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          <Button href="/quote" size="lg" icon={<Icon name="arrow" size={18} />}>
-            Get my free quote
-          </Button>
-          <Button href={site.phoneHref} variant="outline" size="lg" icon={<Icon name="phone" size={17} />}>
+        <div className="mt-8 flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-7">
+          <Link
+            href="/quote"
+            className="group inline-flex items-center gap-2.5 border border-ink px-6 py-3.5 text-[0.95rem] font-medium text-ink transition-colors hover:border-accent hover:text-accent"
+          >
+            Request a site visit
+            <span className="transition-transform duration-300 group-hover:translate-x-[3px]" aria-hidden>→</span>
+          </Link>
+          <a href={site.phoneHref} className="mono-label tnum text-ink transition-colors hover:text-accent">
             {site.phone}
-          </Button>
+          </a>
         </div>
       </PageHero>
 
-      {/* PROBLEM + AGITATE, with a framed photo */}
-      <Section>
+      {/* PROBLEM + AGITATE: a squared figure beside a measured problem statement */}
+      <Section className="bg-paper">
         <Container>
-          <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+          <SheetHeader index="01" title="The Problem" />
+          <div className="mt-12 grid items-start gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
             <div>
-              <span className="eyebrow inline-flex items-center gap-2">
-                <span className="h-px w-7 bg-molten" /> The problem
-              </span>
-              <p className="mt-4 text-pretty text-2xl leading-snug text-bone sm:text-[1.8rem]">
+              <p className="head-sans text-balance text-[1.6rem] leading-snug text-ink sm:text-[1.9rem]">
                 {service.problem}
               </p>
-              <div className="mt-7 rounded-2xl border border-line bg-slate-900/50 p-6">
-                <h3 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.16em] text-ash">
-                  <Icon name="clock" size={15} className="text-molten-bright" /> What it costs to wait
-                </h3>
-                <p className="mt-3 text-pretty leading-relaxed text-mist">{media.stakes}</p>
+
+              <div className="mt-9 border-t border-line pt-5">
+                <span className="mono-label inline-flex items-center gap-2 text-accent">
+                  <Icon name="clock" size={14} /> What it costs to wait
+                </span>
+                <p className="mt-3 text-pretty text-[1.0625rem] leading-relaxed text-ink-2">{media.stakes}</p>
               </div>
-              <div className="mt-7 flex flex-wrap gap-2">
-                <span className="text-sm font-medium text-ash">Common for:</span>
-                {service.idealFor.map((x) => (
-                  <span key={x} className="inline-flex items-center gap-1.5 rounded-full border border-line bg-slate-800/60 px-3 py-1 text-sm text-mist">
-                    {x}
-                  </span>
-                ))}
+
+              <div className="mt-9 border-t border-line pt-5">
+                <span className="mono-label">Common for</span>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {service.idealFor.map((x) => (
+                    <span
+                      key={x}
+                      className="inline-flex items-center border border-line bg-surface px-3 py-1.5 text-sm text-ink-2"
+                    >
+                      {x}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
 
-            <Reveal className="relative order-first lg:order-last">
-              <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-line">
+            <Reveal className="order-first lg:order-last">
+              <figure className="overflow-hidden">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={asset(media.gallery[0])} alt={`${service.name} by The Epoxy Guys`} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
-                <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(8,9,11,0.35), transparent 55%)" }} />
-                <span className="absolute left-4 top-4 grid h-12 w-12 place-items-center rounded-2xl border border-line bg-white/90 text-ink shadow-[var(--shadow-soft)] backdrop-blur">
-                  <Icon name={service.icon} size={24} />
-                </span>
-              </div>
+                <img
+                  src={asset(media.gallery[0])}
+                  alt={`${service.name} by The Epoxy Guys`}
+                  loading="lazy"
+                  className="aspect-[4/5] w-full object-cover"
+                />
+                <figcaption className="plate-caption mt-3">
+                  01 / {site.address.city}, MI · {service.navLabel}
+                </figcaption>
+              </figure>
             </Reveal>
           </div>
         </Container>
       </Section>
 
-      {/* CINEMATIC PARALLAX BAND with the promise */}
+      {/* THE FIX: a full-bleed graded plate, text seated on a bottom gradient */}
       <section className="relative h-[52vh] min-h-[340px] overflow-hidden">
         <Parallax className="absolute inset-0" distance={60}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={asset(media.gallery[1])} alt="" aria-hidden className="h-[118%] w-full object-cover" loading="lazy" />
         </Parallax>
-        <div className="absolute inset-0" style={{ background: "linear-gradient(95deg, rgba(8,9,11,0.85), rgba(8,9,11,0.5) 60%, rgba(8,9,11,0.7))" }} />
-        <div className="relative mx-auto flex h-full max-w-7xl items-center px-5 sm:px-8">
+        <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(15,16,18,0.85), rgba(15,16,18,0.25) 55%, transparent)" }} />
+        <div className="relative mx-auto flex h-full max-w-7xl items-end px-6 pb-12 sm:px-10">
           <Reveal className="max-w-2xl">
-            <span className="eyebrow">The fix</span>
-            <p className="font-display mt-3 text-balance text-3xl leading-tight text-white sm:text-4xl md:text-5xl">
+            <span className="mono-label text-white/70">The fix</span>
+            <p className="head-sans mt-3 text-balance text-[1.7rem] leading-tight text-white sm:text-[2.2rem] md:text-[2.6rem]">
               {service.promise}
             </p>
           </Reveal>
         </div>
       </section>
 
-      {/* BENEFITS */}
-      <Section>
+      {/* BENEFITS: a ruled spec list, mono-indexed, no cards */}
+      <Section className="bg-paper">
         <Container>
-          <SectionHeading
-            eyebrow="Why it is worth it"
-            title={
-              <>
-                What you get with <span className="molten-text">The Epoxy Guys</span>.
-              </>
-            }
-            lead="No shortcuts, no surprises, and a floor engineered to outlast cheap epoxy by years."
-          />
-          <RevealGroup className="mt-12 grid gap-5 sm:grid-cols-2">
-            {service.benefits.map((b) => (
+          <SheetHeader index="02" title="What You Get" />
+          <div className="mt-12 max-w-2xl">
+            <h2 className="head-sans text-balance text-[1.9rem] text-ink sm:text-[2.4rem] md:text-[2.75rem]">
+              What you get with The Epoxy Guys.
+            </h2>
+            <p className="mt-5 text-pretty text-[1.0625rem] leading-relaxed text-ink-2">
+              No shortcuts, no surprises, and a floor engineered to outlast cheap epoxy by years.
+            </p>
+          </div>
+          <RevealGroup className="mt-16 grid gap-x-14 gap-y-0 sm:grid-cols-2">
+            {service.benefits.map((b, i) => (
               <RevealItem key={b.title}>
-                <div className="panel sheen flex h-full gap-4 rounded-2xl p-6">
-                  <span className="mt-0.5 grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-molten/25 bg-molten/10 text-molten-bright">
-                    <Icon name="check" size={18} />
+                <div className="border-t border-line py-7">
+                  <span className="mono-label tnum text-accent">
+                    {String(i + 1).padStart(2, "0")}
                   </span>
-                  <div>
-                    <h3 className="font-display text-lg text-bone">{b.title}</h3>
-                    <p className="mt-1.5 text-sm leading-relaxed text-ash">{b.body}</p>
-                  </div>
+                  <h3 className="head-sans mt-3 text-xl text-ink">{b.title}</h3>
+                  <p className="mt-2 text-pretty text-[1.0625rem] leading-relaxed text-ink-2">{b.body}</p>
                 </div>
               </RevealItem>
             ))}
@@ -209,27 +220,27 @@ export default async function ServiceDetail({
       </Section>
 
       {/* FEATURED REVIEW (social proof) */}
-      <Section className="bg-slate-900/40">
+      <Section className="bg-surface">
         <Container className="max-w-3xl text-center">
           <Reveal>
             <div className="flex justify-center">
               <Stars />
             </div>
-            <blockquote className="font-display mt-6 text-balance text-2xl leading-snug text-bone sm:text-[1.8rem]">
+            <blockquote className="head-sans mt-6 text-balance text-[1.5rem] leading-snug text-ink sm:text-[1.9rem]">
               &ldquo;{featured.quote}&rdquo;
             </blockquote>
             <div className="mt-6 flex flex-col items-center gap-1">
-              <span className="text-sm font-semibold text-bone">{featured.name}</span>
-              <span className="text-xs text-ash">{featured.detail}</span>
+              <span className="mono-label text-ink">{featured.name}</span>
+              <span className="plate-caption">{featured.detail}</span>
             </div>
             <a
               href={googleRating.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-7 inline-flex items-center gap-2 text-sm font-semibold text-molten-bright hover:text-bone"
+              className="group mt-8 inline-flex items-center gap-2 mono-label tnum text-ink transition-colors hover:text-accent"
             >
-              {googleRating.score} stars from {googleRating.count} Google reviews
-              <Icon name="arrow" size={15} />
+              {googleRating.score} stars / {googleRating.count} Google reviews
+              <span className="transition-transform duration-300 group-hover:translate-x-[3px]" aria-hidden>→</span>
             </a>
           </Reveal>
         </Container>
@@ -237,28 +248,33 @@ export default async function ServiceDetail({
 
       {/* RELATED FINISHES */}
       {related.length ? (
-        <Section>
+        <Section className="bg-paper">
           <Container>
-            <SectionHeading
-              eyebrow="Finishes"
-              title={
-                <>
-                  Popular finishes for <span className="molten-text">this space</span>.
-                </>
-              }
-              lead="A few of the looks customers choose for this kind of project."
-            />
-            <RevealGroup className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3">
-              {related.map((f) => (
+            <SheetHeader index="03" title="Finishes" />
+            <div className="mt-12 max-w-2xl">
+              <h2 className="head-sans text-balance text-[1.9rem] text-ink sm:text-[2.4rem] md:text-[2.75rem]">
+                Popular finishes for this space.
+              </h2>
+              <p className="mt-5 text-pretty text-[1.0625rem] leading-relaxed text-ink-2">
+                A few of the looks customers choose for this kind of project.
+              </p>
+            </div>
+            <RevealGroup className="mt-12 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3">
+              {related.map((f, i) => (
                 <RevealItem key={f.slug}>
-                  <Link href={`/finishes#${f.slug}`} className="group relative block aspect-[4/3] min-w-0 overflow-hidden rounded-2xl border border-line transition-transform duration-500 hover:-translate-y-0.5">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={asset(f.image)} alt={f.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                    <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(8,9,11,0.9), transparent 60%)" }} />
-                    <div className="absolute inset-x-0 bottom-0 p-4">
-                      <h3 className="font-display text-lg text-white">{f.name}</h3>
-                      <p className="text-xs text-white/80">{f.tagline}</p>
-                    </div>
+                  <Link href={`/finishes#${f.slug}`} className="group block min-w-0">
+                    <figure className="overflow-hidden">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={asset(f.image)}
+                        alt={f.name}
+                        loading="lazy"
+                        className="aspect-[4/3] w-full object-cover"
+                      />
+                      <figcaption className="plate-caption mt-3 transition-colors group-hover:text-accent">
+                        {String(i + 1).padStart(2, "0")} / {f.name} · {f.tagline}
+                      </figcaption>
+                    </figure>
                   </Link>
                 </RevealItem>
               ))}
@@ -268,48 +284,66 @@ export default async function ServiceDetail({
       ) : null}
 
       {/* GUARANTEE / OFFER (risk reversal) */}
-      <Section className="bg-slate-900/40">
+      <Section className="bg-surface">
         <Container>
-          <SectionHeading
-            align="center"
-            eyebrow="No risk to find out"
-            title={
-              <>
-                Your floor, <span className="molten-text">guaranteed</span>.
-              </>
-            }
-          />
-          <RevealGroup className="mt-12 grid gap-5 md:grid-cols-3">
-            {guarantees.map((g) => (
-              <RevealItem key={g.title}>
-                <div className="panel molten-edge flex h-full flex-col gap-3 rounded-2xl p-6 text-center">
-                  <span className="mx-auto grid h-12 w-12 place-items-center rounded-xl border border-molten/25 bg-molten/10 text-molten-bright">
-                    <Icon name={g.icon} size={22} />
-                  </span>
-                  <h3 className="font-display text-lg text-bone">{g.title}</h3>
-                  <p className="text-sm leading-relaxed text-ash">{g.body}</p>
-                </div>
-              </RevealItem>
-            ))}
-          </RevealGroup>
-          <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Button href={`/quote?service=${service.slug}`} size="lg" icon={<Icon name="arrow" size={18} />}>
-              Get my free quote
-            </Button>
-            <Button href={site.phoneHref} variant="outline" size="lg" icon={<Icon name="phone" size={17} />}>
-              Call {site.phone}
-            </Button>
+          <SheetHeader index="04" title="The Guarantee" />
+          <div className="mt-12 grid gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:gap-16">
+            <div>
+              <h2 className="head-sans text-balance text-[1.9rem] text-ink sm:text-[2.4rem] md:text-[2.75rem]">
+                Your floor, guaranteed.
+              </h2>
+              <p className="mt-5 max-w-md text-pretty text-[1.0625rem] leading-relaxed text-ink-2">
+                No risk to find out. The terms we stand behind, in writing, before any work begins.
+              </p>
+              <div className="mt-10">
+                <SpecTable
+                  rows={[
+                    { key: "Warranty", value: `${site.warrantyYears} yr`, accent: true },
+                    { key: "On site", value: "Owner, every job" },
+                    { key: "Quote", value: "Free, no deposit" },
+                  ]}
+                />
+              </div>
+            </div>
+
+            <RevealGroup>
+              {guarantees.map((g) => (
+                <RevealItem key={g.title}>
+                  <div className="flex gap-5 border-t border-line py-7">
+                    <span className="mt-0.5 shrink-0 text-accent">
+                      <Icon name={g.icon} size={20} />
+                    </span>
+                    <div>
+                      <h3 className="head-sans text-xl text-ink">{g.title}</h3>
+                      <p className="mt-2 text-pretty text-[1.0625rem] leading-relaxed text-ink-2">{g.body}</p>
+                    </div>
+                  </div>
+                </RevealItem>
+              ))}
+            </RevealGroup>
+          </div>
+
+          <div className="mt-14 flex flex-col items-start gap-5 border-t border-line pt-10 sm:flex-row sm:items-center sm:gap-7">
+            <Link
+              href={`/quote?service=${service.slug}`}
+              className="group inline-flex items-center gap-2.5 border border-ink px-6 py-3.5 text-[0.95rem] font-medium text-ink transition-colors hover:border-accent hover:text-accent"
+            >
+              Request a site visit
+              <span className="transition-transform duration-300 group-hover:translate-x-[3px]" aria-hidden>→</span>
+            </Link>
+            <a href={site.phoneHref} className="mono-label tnum text-ink transition-colors hover:text-accent">
+              {site.phone}
+            </a>
           </div>
         </Container>
       </Section>
 
-      {/* THE RESULT (dark transformation close) */}
-      <section className="relative overflow-hidden border-y border-line bg-void">
-        <div className="grain absolute inset-0" />
-        <Container className="relative max-w-3xl py-24 text-center sm:py-28">
+      {/* THE RESULT (transformation close) */}
+      <section className="relative border-y border-line bg-paper">
+        <Container className="max-w-3xl py-24 text-center sm:py-28">
           <Reveal>
-            <span className="eyebrow">The result</span>
-            <p className="font-display mt-6 text-balance text-3xl leading-[1.18] text-bone sm:text-4xl md:text-[2.9rem]">
+            <span className="mono-label">The result</span>
+            <p className="head-sans mt-6 text-balance text-[1.9rem] leading-[1.18] text-ink sm:text-[2.4rem] md:text-[2.8rem]">
               {service.outcome}
             </p>
           </Reveal>
@@ -321,20 +355,29 @@ export default async function ServiceDetail({
       <CtaBand title="Ready to transform your floor?" />
 
       {/* OTHER SERVICES */}
-      <Section className="bg-slate-900/40">
+      <Section className="bg-surface">
         <Container>
-          <SectionHeading eyebrow="Keep exploring" title="Other services you might need" />
-          <RevealGroup className="mt-10 grid gap-5 sm:grid-cols-3">
+          <SheetHeader index="05" title="Keep Exploring" />
+          <div className="mt-12 max-w-2xl">
+            <h2 className="head-sans text-balance text-[1.9rem] text-ink sm:text-[2.4rem] md:text-[2.75rem]">
+              Other services you might need.
+            </h2>
+          </div>
+          <RevealGroup className="mt-12 grid gap-x-14 sm:grid-cols-3">
             {others.map((o) => (
               <RevealItem key={o.slug}>
-                <Link href={`/services/${o.slug}`} className="group panel flex h-full items-start gap-4 rounded-2xl p-5 transition-transform hover:-translate-y-1">
-                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-line bg-slate-800 text-molten-bright">
-                    <Icon name={o.icon} size={20} />
+                <Link href={`/services/${o.slug}`} className="group flex h-full flex-col border-t border-line py-7">
+                  <span className="text-accent">
+                    <Icon name={o.icon} size={22} />
                   </span>
-                  <div>
-                    <h3 className="font-display text-lg text-bone">{o.navLabel}</h3>
-                    <p className="mt-1 text-sm text-ash">{o.promise}</p>
-                  </div>
+                  <h3 className="head-sans mt-4 text-xl text-ink transition-colors group-hover:text-accent">
+                    {o.navLabel}
+                  </h3>
+                  <p className="mt-2 text-pretty text-[1.0625rem] leading-relaxed text-ink-2">{o.promise}</p>
+                  <span className="mono-label mt-5 inline-flex items-center gap-2 text-ink transition-colors group-hover:text-accent">
+                    View service
+                    <span className="transition-transform duration-300 group-hover:translate-x-[3px]" aria-hidden>→</span>
+                  </span>
                 </Link>
               </RevealItem>
             ))}

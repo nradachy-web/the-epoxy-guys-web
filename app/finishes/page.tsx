@@ -5,8 +5,7 @@ import { JsonLd, breadcrumbSchema } from "@/lib/schema";
 import { PageHero } from "@/components/sections/PageHero";
 import { CtaBand } from "@/components/sections/CtaBand";
 import { Container, Section } from "@/components/ui/Primitives";
-import { Button } from "@/components/ui/Button";
-import { Icon } from "@/components/ui/Icons";
+import { SpecTable } from "@/components/ui/Spec";
 import { Reveal } from "@/components/ui/Reveal";
 
 export const metadata: Metadata = {
@@ -42,40 +41,71 @@ export default function FinishesPage() {
 
       <Section>
         <Container>
-          <div className="space-y-20 sm:space-y-28">
-            {finishes.map((f, i) => (
-              <Reveal key={f.slug}>
-                <article id={f.slug} className="grid scroll-mt-28 items-center gap-8 lg:grid-cols-2 lg:gap-14">
-                  <div className={`relative overflow-hidden rounded-3xl border border-line ${i % 2 ? "lg:order-last" : ""}`}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={asset(f.image)} alt={`${f.name} epoxy floor finish`} loading="lazy" className="aspect-[5/4] w-full object-cover" />
-                  </div>
-                  <div>
-                    <span className="eyebrow inline-flex items-center gap-2">
-                      <span className="h-px w-7 bg-molten" /> {f.tagline}
-                    </span>
-                    <h2 className="font-display mt-3 text-3xl text-bone sm:text-4xl">{f.name}</h2>
-                    <p className="mt-4 text-pretty text-lg leading-relaxed text-mist">{f.body}</p>
-                    <div className="mt-6 flex flex-wrap items-center gap-2.5">
-                      <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-slate-800/60 px-3.5 py-1.5 text-sm text-mist">
-                        <Icon name="check" size={14} className="text-molten" /> Best for: {f.bestFor}
-                      </span>
-                      {f.priceNote ? (
-                        <span className="inline-flex items-center gap-1.5 rounded-full border border-molten/25 bg-molten/10 px-3.5 py-1.5 text-sm text-molten-bright">
-                          <Icon name="sparkle" size={14} /> {f.priceNote}
+          <ol>
+            {finishes.map((f, i) => {
+              const no = String(i + 1).padStart(2, "0");
+              return (
+                <li
+                  key={f.slug}
+                  id={f.slug}
+                  className="scroll-mt-28 border-t border-line py-14 first:border-t-0 sm:py-20"
+                >
+                  <Reveal>
+                    <article
+                      className={`grid items-center gap-8 lg:grid-cols-2 lg:gap-16 ${
+                        i % 2 ? "lg:[&>figure]:order-last" : ""
+                      }`}
+                    >
+                      <figure className="overflow-hidden">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={asset(f.image)}
+                          alt={`${f.name} epoxy floor finish`}
+                          width={1200}
+                          height={960}
+                          loading="lazy"
+                          className="aspect-[5/4] w-full object-cover"
+                        />
+                        <figcaption className="plate-caption mt-3">
+                          {no} / {site.address.city}, MI &middot; {f.name}
+                        </figcaption>
+                      </figure>
+                      <div className="lg:px-2">
+                        <span className="mono-label tnum text-accent">
+                          {no} <span className="text-muted">/ {f.tagline}</span>
                         </span>
-                      ) : null}
-                    </div>
-                    <div className="mt-7">
-                      <Button href={`/quote?finish=${f.slug}`} variant="outline" icon={<Icon name="arrow" size={16} />}>
-                        Get this finish quoted
-                      </Button>
-                    </div>
-                  </div>
-                </article>
-              </Reveal>
-            ))}
-          </div>
+                        <h2 className="head-sans mt-3 text-[1.9rem] text-ink sm:text-[2.4rem]">{f.name}</h2>
+                        <p className="mt-4 max-w-md text-pretty text-[1.0625rem] leading-relaxed text-ink-2">
+                          {f.body}
+                        </p>
+                        <div className="mt-7">
+                          <SpecTable
+                            rows={[
+                              { key: "Best for", value: f.bestFor },
+                              ...(f.priceNote
+                                ? [{ key: "Pricing", value: f.priceNote, accent: true }]
+                                : []),
+                            ]}
+                          />
+                        </div>
+                        <div className="mt-8">
+                          <a
+                            href={asset(`/quote/?finish=${f.slug}`)}
+                            className="group inline-flex items-center gap-2.5 border border-ink px-6 py-3.5 text-[0.95rem] font-medium text-ink transition-colors hover:border-accent hover:text-accent"
+                          >
+                            Request a site visit
+                            <span className="transition-transform duration-300 group-hover:translate-x-[3px]" aria-hidden>
+                              →
+                            </span>
+                          </a>
+                        </div>
+                      </div>
+                    </article>
+                  </Reveal>
+                </li>
+              );
+            })}
+          </ol>
         </Container>
       </Section>
 

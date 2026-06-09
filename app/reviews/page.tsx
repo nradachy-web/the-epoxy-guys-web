@@ -5,8 +5,7 @@ import { PageHero } from "@/components/sections/PageHero";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { CtaBand } from "@/components/sections/CtaBand";
 import { Container, Section } from "@/components/ui/Primitives";
-import { Button } from "@/components/ui/Button";
-import { Icon } from "@/components/ui/Icons";
+import { Reveal } from "@/components/ui/Reveal";
 
 export const metadata: Metadata = {
   title: "Reviews & Testimonials, Genesee County MI",
@@ -40,20 +39,38 @@ export default function ReviewsPage() {
 
       <Testimonials heading={false} />
 
-      <Section className="pt-0">
-        <Container className="max-w-2xl text-center">
-          <p className="text-pretty text-mist">
-            Worked with us before? We would be grateful if you shared your experience so future
-            neighbors know what to expect.
-          </p>
-          <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Button href={site.facebook} external variant="outline" icon={<Icon name="arrow" size={16} />}>
-              Leave a review on Facebook
-            </Button>
-            <Button href={site.phoneHref} variant="phone" icon={<Icon name="phone" size={16} />}>
-              {site.phone}
-            </Button>
-          </div>
+      <Section className="bg-paper pt-0">
+        <Container>
+          <Reveal>
+            <div className="flex flex-col gap-8 border-t border-line pt-10 lg:flex-row lg:items-end lg:justify-between lg:gap-16">
+              <div className="max-w-xl">
+                <span className="mono-label">Worked with us before</span>
+                <p className="mt-4 text-pretty text-[1.0625rem] leading-relaxed text-ink-2">
+                  We would be grateful if you shared your experience, so future neighbors know what to
+                  expect from David and Michelle.
+                </p>
+              </div>
+              <div className="flex shrink-0 flex-col gap-5 sm:flex-row sm:items-center sm:gap-7">
+                <a
+                  href={site.facebook}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group inline-flex items-center gap-2.5 border border-ink px-6 py-3.5 text-[0.95rem] font-medium text-ink transition-colors hover:border-accent hover:text-accent"
+                >
+                  Leave a review on Facebook
+                  <span className="transition-transform duration-300 group-hover:translate-x-[3px]" aria-hidden>
+                    →
+                  </span>
+                </a>
+                <a
+                  href={site.phoneHref}
+                  className="mono-label tnum text-ink transition-colors hover:text-accent"
+                >
+                  {site.phone}
+                </a>
+              </div>
+            </div>
+          </Reveal>
         </Container>
       </Section>
 

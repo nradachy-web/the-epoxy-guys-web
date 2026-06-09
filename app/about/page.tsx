@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
-import { site } from "@/lib/site";
+import { site, googleRating } from "@/lib/site";
 import { asset } from "@/lib/asset";
 import { JsonLd, breadcrumbSchema } from "@/lib/schema";
 import { PageHero } from "@/components/sections/PageHero";
 import { ProcessTimeline } from "@/components/sections/ProcessTimeline";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { CtaBand } from "@/components/sections/CtaBand";
-import { Container, Section, SectionHeading } from "@/components/ui/Primitives";
-import { Icon } from "@/components/ui/Icons";
-import { Reveal, RevealGroup, RevealItem } from "@/components/ui/Reveal";
+import { Container, Section, SheetHeader } from "@/components/ui/Primitives";
+import { SpecTable } from "@/components/ui/Spec";
+import { Reveal } from "@/components/ui/Reveal";
 
 export const metadata: Metadata = {
   title: "About Us: A Flint, MI Family Business",
@@ -18,10 +18,10 @@ export const metadata: Metadata = {
 };
 
 const values = [
-  { icon: "user", title: "Owner on every job", body: "David is on site for your project from prep to topcoat. The person who quotes your floor is the person who pours it." },
-  { icon: "shield", title: "Prep, never skipped", body: "We diamond grind, repair, and manage moisture on every floor. It is the unglamorous step that makes the warranty real." },
-  { icon: "check", title: "Honest, no pressure", body: "Clear quotes, fair pricing, and straight answers. We would rather earn a referral than push a sale." },
-  { icon: "pin", title: "Local and family-owned", body: "We live and work in Genesee County. Our reputation is our neighbors, so we treat every floor like it is our own." },
+  { no: "01", title: "Owner on every job", body: "David is on site for your project from prep to topcoat. The person who quotes your floor is the person who pours it." },
+  { no: "02", title: "Prep, never skipped", body: "We diamond grind, repair, and manage moisture on every floor. It is the unglamorous step that makes the warranty real." },
+  { no: "03", title: "Honest, no pressure", body: "Clear quotes, fair pricing, and straight answers. We would rather earn a referral than push a sale." },
+  { no: "04", title: "Local and family-owned", body: "We live and work in Genesee County. Our reputation is our neighbors, so we treat every floor like it is our own." },
 ];
 
 export default function AboutPage() {
@@ -48,11 +48,13 @@ export default function AboutPage() {
         image="/photos/service-polyaspartic.jpg"
       />
 
-      <Section>
+      {/* ---- the owner story: asymmetric, hairline structure, one serif moment ---- */}
+      <Section className="bg-paper">
         <Container>
-          <div className="grid gap-12 lg:grid-cols-[1.3fr_1fr] lg:gap-16">
+          <SheetHeader index="01" title="The Owners" />
+          <div className="mt-12 grid gap-12 lg:grid-cols-[1.3fr_1fr] lg:gap-16">
             <Reveal className="max-w-2xl">
-              <div className="space-y-5 text-pretty text-lg leading-relaxed text-mist">
+              <div className="space-y-5 text-pretty text-[1.0625rem] leading-relaxed text-ink-2">
                 <p>
                   From a young age, David learned that service is everything. He spent his early years
                   working across Genesee, Oakland, and Lapeer counties, and he learned that building a
@@ -74,44 +76,99 @@ export default function AboutPage() {
                   would want to be treated.
                 </p>
               </div>
-              <div className="mt-8 rounded-2xl border border-molten/20 bg-molten/[0.06] p-6">
-                <p className="text-pretty text-lg italic leading-relaxed text-bone">
+
+              {/* the page's single serif moment: the owner pull-quote */}
+              <blockquote className="mt-12 border-t border-line pt-8">
+                <p className="display-quote text-balance text-2xl text-ink sm:text-[1.7rem]">
                   &ldquo;Quality process, quality product, quality finish. That is the whole job.&rdquo;
                 </p>
-                <p className="mt-3 text-sm text-ash">{site.owner.name}, {site.owner.title}</p>
-              </div>
+                <footer className="mono-label mt-5">
+                  {site.owner.name} <span className="text-muted">/ {site.owner.title}</span>
+                </footer>
+              </blockquote>
             </Reveal>
 
             <Reveal>
-              <div className="relative overflow-hidden rounded-3xl border border-line">
+              <figure>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={asset("/photos/real-corvette-flake-floor.jpg")} alt="Glossy flake epoxy garage floor in Genesee County" loading="lazy" className="aspect-[3/4] w-full object-cover" />
-                <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(8,9,11,0.32), transparent 50%)" }} />
-                <div className="absolute bottom-4 left-4 flex items-center gap-2 rounded-full bg-white/92 px-3.5 py-1.5 text-xs text-ink shadow-[var(--shadow-soft)] backdrop-blur">
-                  <span className="h-2 w-2 rounded-full bg-accent" /> Flake garage floor
-                </div>
+                <img
+                  src={asset("/photos/graded/real-corvette-flake-floor.jpg")}
+                  alt="Glossy flake epoxy garage floor in Genesee County"
+                  loading="lazy"
+                  className="aspect-[3/4] w-full object-cover"
+                />
+                <figcaption className="plate-caption mt-3">
+                  01 / Genesee County, MI · Flake / Polyaspartic · 2025
+                </figcaption>
+              </figure>
+
+              {/* real facts as a datasheet, not floating badges */}
+              <div className="mt-10">
+                <SpecTable
+                  rows={[
+                    { key: "Owner on site", value: "Every job" },
+                    { key: "Based in", value: `${site.address.city}, MI` },
+                    { key: "Warranty", value: `${site.warrantyYears} yr`, accent: true },
+                    {
+                      key: "Google",
+                      value: (
+                        <span className="tnum">
+                          {googleRating.score} ★ ({googleRating.count})
+                        </span>
+                      ),
+                    },
+                  ]}
+                />
               </div>
             </Reveal>
           </div>
         </Container>
       </Section>
 
-      <Section className="bg-slate-900/40">
+      {/* ---- what we stand for: numbered hairline list, no cards ---- */}
+      <Section className="bg-surface">
         <Container>
-          <SectionHeading align="center" eyebrow="What we stand for" title={<>The promises behind <span className="molten-text">every floor</span>.</>} />
-          <RevealGroup className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <SheetHeader index="02" title="What We Stand For" />
+          <div className="mt-12 max-w-2xl">
+            <h2 className="head-sans text-balance text-[1.9rem] text-ink sm:text-[2.4rem] md:text-[2.75rem]">
+              The promises behind every floor.
+            </h2>
+          </div>
+
+          <ol className="mt-16 grid gap-x-14 gap-y-12 sm:grid-cols-2">
             {values.map((v) => (
-              <RevealItem key={v.title}>
-                <div className="panel flex h-full flex-col gap-3 rounded-2xl p-6">
-                  <span className="grid h-11 w-11 place-items-center rounded-xl border border-molten/25 bg-molten/10 text-molten-bright">
-                    <Icon name={v.icon} size={22} />
+              <li key={v.title} className="border-t border-line pt-6">
+                <Reveal>
+                  <span className="mono-label tnum text-accent">
+                    {v.no} <span className="text-muted">/ 04</span>
                   </span>
-                  <h3 className="font-display text-lg text-bone">{v.title}</h3>
-                  <p className="text-sm leading-relaxed text-ash">{v.body}</p>
-                </div>
-              </RevealItem>
+                  <h3 className="head-sans mt-3 text-2xl text-ink sm:text-[1.7rem]">{v.title}</h3>
+                  <p className="mt-4 max-w-md text-pretty text-[1.0625rem] leading-relaxed text-ink-2">
+                    {v.body}
+                  </p>
+                </Reveal>
+              </li>
             ))}
-          </RevealGroup>
+          </ol>
+
+          {/* one calm CTA, restated plainly */}
+          <div className="mt-20 flex flex-col items-start gap-5 border-t border-line pt-12 sm:flex-row sm:items-center sm:justify-between">
+            <p className="max-w-md text-pretty text-[1.0625rem] leading-relaxed text-ink-2">
+              Talk to the owner who will be standing on your floor.
+            </p>
+            <div className="flex items-center gap-7">
+              <a
+                href={asset("/quote/")}
+                className="group inline-flex items-center gap-2.5 border border-ink px-6 py-3.5 text-[0.95rem] font-medium text-ink transition-colors hover:border-accent hover:text-accent"
+              >
+                Request a site visit
+                <span className="transition-transform duration-300 group-hover:translate-x-[3px]" aria-hidden>→</span>
+              </a>
+              <a href={site.phoneHref} className="mono-label tnum text-ink transition-colors hover:text-accent">
+                {site.phone}
+              </a>
+            </div>
+          </div>
         </Container>
       </Section>
 

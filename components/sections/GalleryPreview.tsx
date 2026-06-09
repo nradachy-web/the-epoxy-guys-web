@@ -1,64 +1,129 @@
 import Link from "next/link";
-import { galleryItems } from "@/lib/gallery";
 import { asset } from "@/lib/asset";
-import { Container, Section, SectionHeading } from "@/components/ui/Primitives";
-import { Icon } from "@/components/ui/Icons";
-import { Button } from "@/components/ui/Button";
-import { RevealGroup, RevealItem } from "@/components/ui/Reveal";
+import { googleRating } from "@/lib/site";
+import { Container, SheetHeader } from "@/components/ui/Primitives";
+import { Reveal } from "@/components/ui/Reveal";
 
-export function GalleryPreview({ limit = 7, heading = true }: { limit?: number; heading?: boolean }) {
-  const items = galleryItems.slice(0, limit);
+/**
+ * WORK (Sheet 04) — a monograph archive. Every plate is the same enforced 3:2
+ * crop, captioned as a print plate with a running mono index (NN — TOWN, MI ·
+ * SYSTEM · YEAR). Varied widths and intentional offsets turn a gallery dump
+ * into a classified archive that quietly proves the 86-job volume.
+ * (Filename kept as GalleryPreview to avoid churn in page.tsx imports.)
+ */
+
+type Plate = {
+  n: string;
+  src: string;
+  alt: string;
+  town: string;
+  system: string;
+  year: string;
+  /** grid span class for editorial rhythm */
+  span: string;
+  offset?: string;
+};
+
+const plates: Plate[] = [
+  {
+    n: "02",
+    src: "/photos/graded/gallery-real-05.jpg",
+    alt: "A finished gray flake epoxy garage floor with a contrasting border",
+    town: "Davison, MI",
+    system: "FS-01 Flake",
+    year: "2025",
+    span: "lg:col-span-7",
+  },
+  {
+    n: "03",
+    src: "/photos/graded/gallery-real-08.jpg",
+    alt: "A finished garage with a flake epoxy floor",
+    town: "Flushing, MI",
+    system: "FS-01 Flake",
+    year: "2025",
+    span: "lg:col-span-5",
+    offset: "lg:mt-20",
+  },
+  {
+    n: "04",
+    src: "/photos/graded/gallery-real-04.jpg",
+    alt: "A room with a finished gray flake epoxy floor",
+    town: "Grand Blanc, MI",
+    system: "FS-02 Metallic",
+    year: "2024",
+    span: "lg:col-span-5",
+  },
+  {
+    n: "05",
+    src: "/photos/graded/gallery-real-10.jpg",
+    alt: "A macro close-up of decorative epoxy flake",
+    town: "Burton, MI",
+    system: "Flake detail",
+    year: "2025",
+    span: "lg:col-span-7",
+    offset: "lg:-mt-12",
+  },
+  {
+    n: "06",
+    src: "/photos/graded/real-corvette-flake-floor.jpg",
+    alt: "A sports car parked on a glossy flake epoxy garage floor",
+    town: "Fenton, MI",
+    system: "FS-01 Flake",
+    year: "2025",
+    span: "lg:col-span-7",
+  },
+  {
+    n: "07",
+    src: "/photos/graded/gallery-real-01.jpg",
+    alt: "A finished two-car garage with a light flake epoxy floor",
+    town: "Swartz Creek, MI",
+    system: "FS-01 Flake",
+    year: "2024",
+    span: "lg:col-span-5",
+    offset: "lg:mt-16",
+  },
+];
+
+export function GalleryPreview({ limit = 6 }: { limit?: number }) {
+  const items = plates.slice(0, limit);
   return (
-    <Section id="gallery">
+    <section id="work" className="relative bg-paper py-28 sm:py-36">
       <Container>
-        {heading ? (
-          <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
-            <SectionHeading
-              eyebrow="Recent work"
-              title={
-                <>
-                  Floors we are <span className="text-accent">proud</span> to put our name on.
-                </>
-              }
-              lead="Real photos from real jobs across Genesee County. No stock, no staging."
-            />
-            <Button href="/gallery" variant="outline" icon={<Icon name="arrow" size={16} />} className="hidden md:inline-flex">
-              Full gallery
-            </Button>
-          </div>
-        ) : null}
+        <SheetHeader index="04" title="The Work" folio="Sheet 05 / 07" />
+        <div className="mt-12 flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
+          <h2 className="head-sans max-w-2xl text-balance text-[1.9rem] text-ink sm:text-[2.4rem] md:text-[2.75rem]">
+            A working archive of Genesee County floors.
+          </h2>
+          <span className="mono-label tnum">Plates 02-{String(items.length + 1).padStart(2, "0")} of {googleRating.count}+</span>
+        </div>
 
-        <RevealGroup
-          className="mt-12 grid grid-cols-2 gap-3 [grid-auto-rows:10rem] sm:grid-cols-3 sm:[grid-auto-rows:12rem] lg:grid-cols-4"
-          stagger={0.05}
-        >
-          {items.map((it) => (
-            <RevealItem key={it.src} className={it.wide ? "col-span-2 row-span-2" : ""}>
-              <Link
-                href="/gallery"
-                className="group relative block h-full min-w-0 overflow-hidden rounded-xl border border-line bg-white shadow-[var(--shadow-soft)]"
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={asset(it.src)}
-                  alt={it.alt}
-                  loading="lazy"
-                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                <span className="absolute bottom-2.5 left-2.5 rounded-full bg-white/92 px-2.5 py-1 text-[0.68rem] font-semibold uppercase tracking-wide text-ink opacity-0 shadow-[var(--shadow-soft)] backdrop-blur transition-opacity duration-200 group-hover:opacity-100">
-                  {it.tag}
-                </span>
+        <div className="mt-16 grid grid-cols-1 gap-x-8 gap-y-14 lg:grid-cols-12">
+          {items.map((p) => (
+            <Reveal key={p.n} className={`${p.span} ${p.offset ?? ""}`}>
+              <Link href="/gallery" className="group block">
+                <div className="overflow-hidden">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={asset(p.src)}
+                    alt={p.alt}
+                    loading="lazy"
+                    className="aspect-[3/2] w-full object-cover transition-transform duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]"
+                  />
+                </div>
+                <p className="plate-caption mt-3">
+                  {p.n} / {p.town} · {p.system} · {p.year}
+                </p>
               </Link>
-            </RevealItem>
+            </Reveal>
           ))}
-        </RevealGroup>
+        </div>
 
-        <div className="mt-8 md:hidden">
-          <Button href="/gallery" variant="outline" className="w-full" icon={<Icon name="arrow" size={16} />}>
-            Full gallery
-          </Button>
+        <div className="mt-16 border-t border-line pt-8">
+          <Link href="/gallery" className="mono-label link-underline text-ink">
+            View the full archive →
+          </Link>
         </div>
       </Container>
-    </Section>
+    </section>
   );
 }
