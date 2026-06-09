@@ -7,7 +7,6 @@ import { MobileCallBar } from "@/components/layout/MobileCallBar";
 import { ScrollProgress } from "@/components/ui/Motion";
 import { JsonLd, localBusinessSchema } from "@/lib/schema";
 import { site } from "@/lib/site";
-import { asset } from "@/lib/asset";
 
 // Fraunces — the one editorial serif voice. Variable axes (opsz, SOFT, WONK)
 // drive optical sizing so large headlines read like a real foundry cut.
@@ -80,7 +79,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en" className={`${fraunces.variable} ${geist.variable} ${geistMono.variable} antialiased`}>
       <body className="min-h-screen bg-paper text-ink">
         <JsonLd data={localBusinessSchema()} />
-        <link rel="preload" as="image" href={asset("/photos/graded/gallery-real-02.jpg")} type="image/jpeg" fetchPriority="high" />
         <ScrollProgress />
         <a
           href="#main"

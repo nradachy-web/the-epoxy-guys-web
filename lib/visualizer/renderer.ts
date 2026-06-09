@@ -14,6 +14,14 @@ import type { Corner } from "./scenes";
 
 type M3 = number[]; // row-major 3x3
 
+/**
+ * The flake FBO is rendered at this multiple of the catalog chip grid, so one
+ * texture repeat holds 16x the unique area — kills visible wallpaper tiling on
+ * the floor. Scene `tile` counts repeats of this DENSER tile; the swatch crops
+ * 1/MULT of the FBO so catalog chips still read at true scale.
+ */
+const FLOOR_GRID_MULT = 4;
+
 function matMul(a: M3, b: M3): M3 {
   const r = new Array(9).fill(0);
   for (let i = 0; i < 3; i++)
@@ -58,68 +66,96 @@ const FLAKE_FS = `#version 300 es
 precision highp float;
 in vec2 vUv; out vec4 frag;
 uniform vec3 uBase; uniform vec3 uChips[5]; uniform float uCdf[5];
-uniform int uChipN; uniform float uGrid; uniform float uCoverage; uniform float uSeed;
+uniform int uChipN; uniform vec4 uGrids; uniform float uCov; uniform float uSeed;
 float h1(vec2 p){ p=fract(p*vec2(123.34,456.21)); p+=dot(p,p+45.32); return fract(p.x*p.y); }
 vec2 h2(vec2 p){ return fract(sin(vec2(dot(p,vec2(127.1,311.7)),dot(p,vec2(269.5,183.3))))*43758.5453); }
 float vnoise(vec2 p){ vec2 i=floor(p),f=fract(p); f=f*f*(3.0-2.0*f);
   return mix(mix(h1(i),h1(i+vec2(1,0)),f.x), mix(h1(i+vec2(0,1)),h1(i+vec2(1,1)),f.x), f.y); }
 vec3 pick(float r){ for(int i=0;i<5;i++){ if(i>=uChipN) break; if(r<=uCdf[i]) return uChips[i]; } return uChips[0]; }
 
-// Voronoi over a wrapped (seamless) grid -> owner cell (xy) + f1,f2 (nearest, 2nd-nearest sq dist)
-vec4 vor(vec2 uv, float grid, float so){
+// Voronoi over a wrapped (seamless) grid -> two nearest cells + sq distances.
+// Grids must be whole numbers or the wrap seams.
+void vor(vec2 uv, float grid, float so, out vec2 o1, out vec2 o2, out float f1, out float f2){
   vec2 cell = floor(uv*grid);
-  float f1=9.0, f2=9.0; vec2 owner=vec2(0.0);
+  f1=9.0; f2=9.0; o1=vec2(0.0); o2=vec2(0.0);
   for(int dy=-1;dy<=1;dy++) for(int dx=-1;dx<=1;dx++){
     vec2 c = cell+vec2(float(dx),float(dy));
     vec2 cw = mod(c,grid);
     vec2 seed = (c + 0.12 + 0.76*h2(cw+so))/grid;
     vec2 d = uv-seed; d -= round(d);
     float dist = dot(d,d);
-    if(dist<f1){ f2=f1; f1=dist; owner=cw; }
-    else if(dist<f2){ f2=dist; }
+    if(dist<f1){ f2=f1; o2=o1; f1=dist; o1=cw; }
+    else if(dist<f2){ f2=dist; o2=cw; }
   }
-  return vec4(owner, f1, f2);
 }
 
-// one angular flake chip: weighted color, per-chip lightness, within-chip marble, dark inter-chip gap
-vec3 chip(vec4 v, float so, float grid, vec2 uv){
-  vec3 c = pick(h1(v.xy+so*1.7));
-  c *= 0.84 + 0.30*h1(v.xy+so*3.3);                          // per-chip lightness variation
-  c *= 0.90 + 0.18*vnoise(uv*grid*2.2 + v.xy*1.7);           // within-chip streak / marble
-  float gap = smoothstep(0.0, 0.11, (sqrt(v.w)-sqrt(v.z))*grid); // shadow line between chips
-  return c * mix(0.46, 1.0, gap);
+// solid vinyl chip: weighted catalog color, strong per-chip shade step, near-flat surface
+vec3 chipCol(vec2 cell, float so, vec2 uv, float grid){
+  vec3 c = pick(h1(cell+so*1.7));
+  c *= 0.86 + 0.22*h1(cell+so*3.3);
+  c *= 0.96 + 0.08*vnoise(uv*grid*1.4 + cell*1.7);
+  return c;
+}
+
+// one broadcast layer: angular chips on a wrapped voronoi, p = per-cell fill odds.
+// Returns color + mask; sh = contact shadow cast just OUTSIDE this layer's chips,
+// which is what makes upper chips read as sitting ON the ones below.
+vec4 layer(vec2 uv, float grid, float so, float p, out float sh){
+  vec2 o1; vec2 o2; float f1; float f2;
+  vor(uv,grid,so,o1,o2,f1,f2);
+  float eb = (sqrt(f2)-sqrt(f1))*grid;  // ~0 at a cell boundary, grows inward
+  sh = 0.0;
+  if(h1(o1+so*4.7) <= p){
+    vec3 c = chipCol(o1,so,uv,grid);
+    c *= mix(0.74,1.0,smoothstep(0.0,0.09,eb));  // thin shaded rim = cut chip edge
+    return vec4(c,1.0);
+  }
+  if(h1(o2+so*4.7) <= p) sh = 1.0-smoothstep(0.0,0.22,eb);
+  return vec4(0.0);
 }
 
 void main(){
-  vec3 col = uBase * (0.88 + 0.22*vnoise(vUv*44.0));          // base coat (mostly hidden at full)
-  // coarse chips — full angular mosaic, gated by broadcast density
-  vec4 A = vor(vUv, uGrid, uSeed);
-  if(h1(A.xy+uSeed*4.7) <= uCoverage) col = chip(A, uSeed, uGrid, vUv);
-  // finer chips scattered on top -> real flake size variation
-  vec4 B = vor(vUv, uGrid*2.05, uSeed+19.0);
-  if(h1(B.xy+uSeed*6.1) <= 0.55*uCoverage) col = chip(B, uSeed+19.0, uGrid*2.05, vUv);
-  if(h1(vUv*1150.0+uSeed) > 0.991) col += 0.30;               // mica sparkle
+  vec3 col = uBase*(0.93+0.10*vnoise(vUv*40.0));  // base coat, near-flat
+  float sh; vec4 L;
+  // three stacked broadcast layers at offset scales + small fragments on top
+  L = layer(vUv, uGrids.x, uSeed     , uCov, sh); if(L.a>0.5){ col = L.rgb; } else { col *= 1.0-0.32*sh; }
+  L = layer(vUv, uGrids.y, uSeed+ 7.0, uCov, sh); if(L.a>0.5){ col = L.rgb; } else { col *= 1.0-0.32*sh; }
+  L = layer(vUv, uGrids.z, uSeed+13.0, uCov, sh); if(L.a>0.5){ col = L.rgb; } else { col *= 1.0-0.32*sh; }
+  L = layer(vUv, uGrids.w, uSeed+19.0, uCov*0.5, sh); if(L.a>0.5){ col = L.rgb; }
+  if(h1(vUv*1150.0+uSeed) > 0.991) col += 0.30;   // mica sparkle
   frag = vec4(clamp(col,0.0,1.0),1.0);
 }`;
 
 const COMP_FS = `#version 300 es
 precision highp float;
 in vec2 vUv; out vec4 frag;
-uniform sampler2D uScene; uniform sampler2D uLight; uniform sampler2D uFlake;
+uniform sampler2D uScene; uniform sampler2D uLight; uniform sampler2D uFlake; uniform sampler2D uMask;
 uniform mat3 uHinv; uniform float uTile; uniform float uGloss; uniform float uMean; uniform float uWallReject;
+uniform float uHasMask;
 void main(){
   vec3 scene = texture(uScene, vUv).rgb;
   vec3 p = uHinv * vec3(vUv,1.0);
   vec2 f = p.xy/p.z;
-  if(f.x<0.0||f.x>1.0||f.y<0.0||f.y>1.0){ frag=vec4(scene,1.0); return; }
-  float fe = 0.014;
-  float edge = smoothstep(0.0,fe,f.x)*smoothstep(0.0,fe,f.y)*smoothstep(0.0,fe,1.0-f.x)*smoothstep(0.0,fe,1.0-f.y);
-  // wall-reject: clip bright walls the quad overlaps (the floor reads darker than white walls)
-  float sceneLum = dot(scene, vec3(0.299,0.587,0.114));
-  edge *= 1.0 - smoothstep(uWallReject-0.05, uWallReject+0.03, sceneLum);
-  vec3 flake = texture(uFlake, fract(f*uTile)).rgb;
+  float edge;
+  if(uHasMask > 0.5){
+    // rotoscoped floor cutout: the mask alone decides visibility (objects on the
+    // floor occlude the flake); the homography extrapolates the plane past the quad
+    edge = texture(uMask, vUv).r;
+    if(edge < 0.004){ frag=vec4(scene,1.0); return; }
+  } else {
+    // user uploads have no mask: clip to the marked quad + luminance wall-reject
+    if(f.x<0.0||f.x>1.0||f.y<0.0||f.y>1.0){ frag=vec4(scene,1.0); return; }
+    float fe = 0.014;
+    edge = smoothstep(0.0,fe,f.x)*smoothstep(0.0,fe,f.y)*smoothstep(0.0,fe,1.0-f.x)*smoothstep(0.0,fe,1.0-f.y);
+    float sceneLum = dot(scene, vec3(0.299,0.587,0.114));
+    edge *= 1.0 - smoothstep(uWallReject-0.05, uWallReject+0.03, sceneLum);
+  }
+  // REPEAT wrap handles tiling; fract() here would break mip derivatives at seams
+  vec3 flake = texture(uFlake, f*uTile).rgb;
   float lum = texture(uLight, vUv).r;
-  float light = clamp(lum/max(uMean,0.001), 0.5, 1.7);
+  // partial relight: keep the blend's true colors (chips must stay readable),
+  // only borrow a fraction of the photo's shading so shadows still ground it
+  float light = clamp(mix(1.0, lum/max(uMean,0.001), 0.6), 0.62, 1.28);
   vec3 lit = flake*light;
 
   // --- polyaspartic clear coat (fully procedural -> no scene-sampled artifacts) ---
@@ -128,9 +164,9 @@ void main(){
   lit = mix(lit, wet, uGloss*0.6);
   // a smooth far-field sheen that brightens toward the back, plus the photo's own
   // bright floor spots. No mirroring of the room, so bright windows cannot blob.
-  float sheen = smoothstep(0.1, 1.0, f.y) * 0.5;
-  float hot = clamp(smoothstep(uMean*1.06, 1.0, lum), 0.0, 0.6);
-  vec3 coat = vec3(0.96, 0.97, 1.0) * (sheen*0.55 + hot*0.5);
+  float sheen = smoothstep(0.25, 1.0, f.y) * 0.22;
+  float hot = clamp(smoothstep(uMean*1.18, 1.0, lum), 0.0, 0.45);
+  vec3 coat = vec3(0.96, 0.97, 1.0) * (sheen*0.55 + hot*0.35);
   vec3 glossed = lit + uGloss*coat;
   frag = vec4(mix(scene, glossed, edge), 1.0);
 }`;
@@ -149,11 +185,13 @@ export class FlakeRenderer {
   private flakeTex: WebGLTexture;
   private sceneTex: WebGLTexture | null = null;
   private lightTex: WebGLTexture | null = null;
+  private maskTex: WebGLTexture | null = null;
+  private hasMask = false;
   private hinv: M3 = [1, 0, 0, 0, 1, 0, 0, 0, 1];
   private mean = 0.5;
   private tile = 12;
   private wallReject = 1.2;
-  readonly FBO_SIZE = 1024;
+  readonly FBO_SIZE = 2048;
 
   constructor(private canvas: HTMLCanvasElement) {
     const gl = canvas.getContext("webgl2", { antialias: true, preserveDrawingBuffer: true });
@@ -177,6 +215,15 @@ export class FlakeRenderer {
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    // anisotropic filtering keeps chips crisp at grazing floor angles (no smear)
+    const aniso = gl.getExtension("EXT_texture_filter_anisotropic");
+    if (aniso) {
+      gl.texParameterf(
+        gl.TEXTURE_2D,
+        aniso.TEXTURE_MAX_ANISOTROPY_EXT,
+        Math.min(8, gl.getParameter(aniso.MAX_TEXTURE_MAX_ANISOTROPY_EXT)),
+      );
+    }
     this.fbo = gl.createFramebuffer()!;
     gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo);
     gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.flakeTex, 0);
@@ -203,7 +250,13 @@ export class FlakeRenderer {
   }
 
   /** Load a scene photo + floor corners (normalized, top-left origin). */
-  async loadScene(url: string, corners: [Corner, Corner, Corner, Corner], tile: number, wallReject = 1.2) {
+  async loadScene(
+    url: string,
+    corners: [Corner, Corner, Corner, Corner],
+    tile: number,
+    wallReject = 1.2,
+    maskUrl?: string,
+  ) {
     const gl = this.gl;
     const img = await loadImage(url);
     this.tile = tile;
@@ -235,6 +288,22 @@ export class FlakeRenderer {
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
 
+    // rotoscoped floor mask (preset scenes); uploads fall back to quad + wall-reject
+    this.hasMask = false;
+    if (maskUrl) {
+      const mimg = await loadImage(maskUrl);
+      this.maskTex ??= gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, this.maskTex);
+      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, mimg);
+      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 0);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      this.hasMask = true;
+    }
+
     // homography: floor uv -> GL uv (flip corner Y to bottom-left origin)
     const gp: Corner[] = corners.map(([x, y]) => [x, 1 - y] as Corner);
     this.hinv = matInv(squareToQuad(gp));
@@ -263,8 +332,12 @@ export class FlakeRenderer {
     gl.uniform3fv(u("uChips"), colors);
     gl.uniform1fv(u("uCdf"), cdf);
     gl.uniform1i(u("uChipN"), chips.length);
-    gl.uniform1f(u("uGrid"), sizeMeta[blend.size].grid);
-    gl.uniform1f(u("uCoverage"), densityMeta[blend.density].coverage);
+    // four wrapped-voronoi layers at offset scales; grids MUST be whole numbers
+    const G = sizeMeta[blend.size].grid * FLOOR_GRID_MULT;
+    gl.uniform4f(u("uGrids"), Math.round(G), Math.round(G * 1.19), Math.round(G * 0.83), Math.round(G * 2.6));
+    // per-layer fill odds so 3 stacked layers compose to the catalog coverage
+    const cov = Math.min(densityMeta[blend.density].coverage, 0.985);
+    gl.uniform1f(u("uCov"), 1 - Math.pow(1 - cov, 1 / 3));
     gl.uniform1f(u("uSeed"), 4.0);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
     gl.bindTexture(gl.TEXTURE_2D, this.flakeTex);
@@ -284,6 +357,8 @@ export class FlakeRenderer {
     gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, this.sceneTex); gl.uniform1i(u("uScene"), 0);
     gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, this.lightTex); gl.uniform1i(u("uLight"), 1);
     gl.activeTexture(gl.TEXTURE2); gl.bindTexture(gl.TEXTURE_2D, this.flakeTex); gl.uniform1i(u("uFlake"), 2);
+    gl.activeTexture(gl.TEXTURE3); gl.bindTexture(gl.TEXTURE_2D, this.hasMask ? this.maskTex : null); gl.uniform1i(u("uMask"), 3);
+    gl.uniform1f(u("uHasMask"), this.hasMask ? 1 : 0);
     // upload Hinv column-major
     const h = this.hinv;
     gl.uniformMatrix3fv(u("uHinv"), false, [h[0], h[3], h[6], h[1], h[4], h[7], h[2], h[5], h[8]]);
@@ -303,20 +378,22 @@ export class FlakeRenderer {
   swatchDataURL(blend: Blend, px = 256): string {
     this.renderFlake(blend);
     const gl = this.gl;
+    // read ONLY a 1/MULT crop of the dense FBO -> swatch chips at true catalog scale
+    const crop = this.FBO_SIZE / FLOOR_GRID_MULT;
+    gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo);
+    const buf = new Uint8Array(crop * crop * 4);
+    gl.readPixels(0, 0, crop, crop, gl.RGBA, gl.UNSIGNED_BYTE, buf);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    const cropCanvas = document.createElement("canvas");
+    cropCanvas.width = crop; cropCanvas.height = crop;
+    const cropCtx = cropCanvas.getContext("2d")!;
+    const id = cropCtx.createImageData(crop, crop);
+    id.data.set(buf);
+    cropCtx.putImageData(id, 0, 0);
     const tmp = document.createElement("canvas");
     tmp.width = px; tmp.height = px;
-    // read FBO center crop
-    gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo);
-    const buf = new Uint8Array(this.FBO_SIZE * this.FBO_SIZE * 4);
-    gl.readPixels(0, 0, this.FBO_SIZE, this.FBO_SIZE, gl.RGBA, gl.UNSIGNED_BYTE, buf);
-    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     const ctx = tmp.getContext("2d")!;
-    const id = ctx.createImageData(this.FBO_SIZE, this.FBO_SIZE);
-    id.data.set(buf);
-    const full = document.createElement("canvas");
-    full.width = this.FBO_SIZE; full.height = this.FBO_SIZE;
-    full.getContext("2d")!.putImageData(id, 0, 0);
-    ctx.drawImage(full, 0, 0, px, px);
+    ctx.drawImage(cropCanvas, 0, 0, crop, crop, 0, 0, px, px);
     return tmp.toDataURL("image/png");
   }
 

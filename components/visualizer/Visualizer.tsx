@@ -58,7 +58,7 @@ export default function Visualizer() {
     if (!r || error) return;
     let alive = true;
     setReady(false);
-    r.loadScene(scene.image, scene.corners, scene.tile, scene.wallReject ?? 1.2)
+    r.loadScene(scene.image, scene.corners, scene.tile, scene.wallReject ?? 1.2, scene.mask)
       .then(() => {
         if (!alive) return;
         setCurrentSwatch(r.swatchDataURL(blend, 240)); // renders flake into the FBO
@@ -100,7 +100,7 @@ export default function Visualizer() {
     if (!marking) return;
     const up: Scene = {
       slug: "upload", name: "Your Room", code: "00",
-      image: marking.url, corners: markCorners as [Corner, Corner, Corner, Corner], tile: 12,
+      image: marking.url, corners: markCorners as [Corner, Corner, Corner, Corner], tile: 2.3,
     };
     setMarking(null);
     setScene(up);
