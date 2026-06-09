@@ -21,9 +21,32 @@ export function QuoteForm({ defaultService = "" }: { defaultService?: string }) 
   const [proj, setProj] = useState(resolveService(defaultService));
 
   useEffect(() => {
-    const param = new URLSearchParams(window.location.search).get("service");
-    const resolved = resolveService(param ?? "");
+    const q = new URLSearchParams(window.location.search);
+    const resolved = resolveService(q.get("service") ?? "");
     if (resolved) setProj(resolved);
+    // A design handed off from the Floor Design Visualizer (?build=...)
+    const build = q.get("build");
+    if (build) {
+      try {
+        const d = JSON.parse(atob(decodeURIComponent(build)));
+        const sizeLabel: Record<string, string> = { fine: '1/16"', standard: '1/8"', broad: '1/4"' };
+        const lines = [
+          "I designed this floor in your visualizer and would like a quote on it:",
+          `• Blend: ${d.n}`,
+          `• Flake size: ${sizeLabel[d.s] ?? d.s}   • Density: ${d.d}`,
+          `• Polyaspartic sheen: ${d.g}%`,
+          d.r ? `• Shown in: ${d.r}` : "",
+          Array.isArray(d.c) ? `• Flake colors: ${d.c.map((c: { hex: string }) => c.hex).join(", ")} on a ${d.bc} base` : "",
+        ].filter(Boolean);
+        const el = document.getElementById("qf-message") as HTMLTextAreaElement | null;
+        if (el) el.value = lines.join("\n");
+        if (!resolved) setProj("Residential Epoxy Flooring");
+        const fin = document.getElementById("qf-finish") as HTMLSelectElement | null;
+        if (fin) fin.value = "Epoxy Flake";
+      } catch {
+        /* ignore malformed build */
+      }
+    }
   }, []);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {

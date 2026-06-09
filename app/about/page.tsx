@@ -4,6 +4,7 @@ import { asset } from "@/lib/asset";
 import { JsonLd, breadcrumbSchema } from "@/lib/schema";
 import { PageHero } from "@/components/sections/PageHero";
 import { ProcessTimeline } from "@/components/sections/ProcessTimeline";
+import { ProcessVideo } from "@/components/sections/ProcessVideo";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { CtaBand } from "@/components/sections/CtaBand";
 import { Container, Section, SheetHeader } from "@/components/ui/Primitives";
@@ -172,6 +173,7 @@ export default function AboutPage() {
         </Container>
       </Section>
 
+      <ProcessVideo index="03" title="The Process" heading="Watch a floor go in, start to finish." className="bg-surface" />
       <ProcessTimeline />
       <Testimonials />
       <CtaBand />

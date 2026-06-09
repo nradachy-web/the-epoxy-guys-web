@@ -15,6 +15,7 @@ import { Icon } from "@/components/ui/Icons";
 const primaryNav = [
   { label: "Work", href: "/gallery" },
   { label: "System", href: "/services" },
+  { label: "Design", href: "/visualizer" },
   { label: "Reviews", href: "/reviews" },
   { label: "Contact", href: "/contact" },
 ];
