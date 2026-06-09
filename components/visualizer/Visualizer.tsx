@@ -24,6 +24,8 @@ export default function Visualizer() {
   const [ready, setReady] = useState(false);
   const [swatches, setSwatches] = useState<Record<string, string>>({});
   const [currentSwatch, setCurrentSwatch] = useState<string>("");
+  const [cal, setCal] = useState(false); // ?cal debug: overlay the floor quad
+  useEffect(() => { setCal(new URLSearchParams(window.location.search).has("cal")); }, []);
 
   const [scene, setScene] = useState<Scene>(presetScenes[0]);
   const [blend, setBlend] = useState<Blend>(presets[0]);
@@ -118,7 +120,23 @@ export default function Visualizer() {
           </div>
         ) : (
           <figure className="relative w-full max-w-5xl">
-            <canvas ref={canvasRef} className="block h-auto w-full" />
+            <div className="relative">
+              <canvas ref={canvasRef} className="block h-auto w-full" />
+              {cal && (
+                <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                  {Array.from({ length: 19 }, (_, i) => (i + 1) * 5).map((p) => (
+                    <g key={p}>
+                      <line x1={p} y1={0} x2={p} y2={100} stroke="#22d3ee" strokeWidth={p % 10 === 0 ? 0.18 : 0.07} opacity="0.5" />
+                      <line x1={0} y1={p} x2={100} y2={p} stroke="#22d3ee" strokeWidth={p % 10 === 0 ? 0.18 : 0.07} opacity="0.5" />
+                    </g>
+                  ))}
+                  <polygon points={scene.corners.map((c) => `${c[0] * 100},${c[1] * 100}`).join(" ")} fill="none" stroke="#f43f5e" strokeWidth="0.4" />
+                  {scene.corners.map((c, i) => (
+                    <circle key={i} cx={c[0] * 100} cy={c[1] * 100} r="1.0" fill="#f43f5e" />
+                  ))}
+                </svg>
+              )}
+            </div>
             <figcaption className="mono-label mt-3 flex items-center justify-between text-white/55">
               <span>{scene.code} / {scene.name.toUpperCase()} · {blend.name.toUpperCase()}</span>
               <span className="tnum">{Math.round(gloss * 100)}% SHEEN</span>
