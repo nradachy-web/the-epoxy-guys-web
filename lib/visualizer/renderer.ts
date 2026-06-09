@@ -61,31 +61,45 @@ uniform vec3 uBase; uniform vec3 uChips[5]; uniform float uCdf[5];
 uniform int uChipN; uniform float uGrid; uniform float uCoverage; uniform float uSeed;
 float h1(vec2 p){ p=fract(p*vec2(123.34,456.21)); p+=dot(p,p+45.32); return fract(p.x*p.y); }
 vec2 h2(vec2 p){ return fract(sin(vec2(dot(p,vec2(127.1,311.7)),dot(p,vec2(269.5,183.3))))*43758.5453); }
+float vnoise(vec2 p){ vec2 i=floor(p),f=fract(p); f=f*f*(3.0-2.0*f);
+  return mix(mix(h1(i),h1(i+vec2(1,0)),f.x), mix(h1(i+vec2(0,1)),h1(i+vec2(1,1)),f.x), f.y); }
 vec3 pick(float r){ for(int i=0;i<5;i++){ if(i>=uChipN) break; if(r<=uCdf[i]) return uChips[i]; } return uChips[0]; }
-void main(){
-  vec2 cell = floor(vUv*uGrid);
-  vec3 col = uBase; float bestZ = -1.0;
+
+// Voronoi over a wrapped (seamless) grid -> owner cell (xy) + f1,f2 (nearest, 2nd-nearest sq dist)
+vec4 vor(vec2 uv, float grid, float so){
+  vec2 cell = floor(uv*grid);
+  float f1=9.0, f2=9.0; vec2 owner=vec2(0.0);
   for(int dy=-1;dy<=1;dy++) for(int dx=-1;dx<=1;dx++){
     vec2 c = cell+vec2(float(dx),float(dy));
-    vec2 cw = mod(c,uGrid);
-    vec2 hh = h2(cw+uSeed);
-    vec2 seed = (c+0.18+0.64*hh)/uGrid;
-    vec2 dd = vUv-seed; dd -= round(dd);
-    float ang = atan(dd.y,dd.x);
-    float k = h1(cw+uSeed*1.7);
-    float rad = (0.46+0.5*h1(cw+uSeed*2.3))/uGrid;
-    float edge = rad*(1.0+0.30*sin(ang*5.0+k*6.28)+0.12*sin(ang*9.0-k*3.0));
-    float z = h1(cw+uSeed*3.1);
-    if(length(dd) < edge && z > bestZ){
-      if(h1(cw+uSeed*4.7) > (1.0-uCoverage)){
-        vec3 cc = pick(h1(cw+uSeed*5.9));
-        float lj = 0.90+0.18*h1(cw+uSeed*7.3);
-        col = cc*lj; bestZ = z;
-      }
-    }
+    vec2 cw = mod(c,grid);
+    vec2 seed = (c + 0.12 + 0.76*h2(cw+so))/grid;
+    vec2 d = uv-seed; d -= round(d);
+    float dist = dot(d,d);
+    if(dist<f1){ f2=f1; f1=dist; owner=cw; }
+    else if(dist<f2){ f2=dist; }
   }
-  if(h1(vUv*900.0+uSeed) > 0.988) col += 0.22;  // mica sparkle
-  frag = vec4(col,1.0);
+  return vec4(owner, f1, f2);
+}
+
+// one angular flake chip: weighted color, per-chip lightness, within-chip marble, dark inter-chip gap
+vec3 chip(vec4 v, float so, float grid, vec2 uv){
+  vec3 c = pick(h1(v.xy+so*1.7));
+  c *= 0.84 + 0.30*h1(v.xy+so*3.3);                          // per-chip lightness variation
+  c *= 0.90 + 0.18*vnoise(uv*grid*2.2 + v.xy*1.7);           // within-chip streak / marble
+  float gap = smoothstep(0.0, 0.11, (sqrt(v.w)-sqrt(v.z))*grid); // shadow line between chips
+  return c * mix(0.46, 1.0, gap);
+}
+
+void main(){
+  vec3 col = uBase * (0.88 + 0.22*vnoise(vUv*44.0));          // base coat (mostly hidden at full)
+  // coarse chips — full angular mosaic, gated by broadcast density
+  vec4 A = vor(vUv, uGrid, uSeed);
+  if(h1(A.xy+uSeed*4.7) <= uCoverage) col = chip(A, uSeed, uGrid, vUv);
+  // finer chips scattered on top -> real flake size variation
+  vec4 B = vor(vUv, uGrid*2.05, uSeed+19.0);
+  if(h1(B.xy+uSeed*6.1) <= 0.55*uCoverage) col = chip(B, uSeed+19.0, uGrid*2.05, vUv);
+  if(h1(vUv*1150.0+uSeed) > 0.991) col += 0.30;               // mica sparkle
+  frag = vec4(clamp(col,0.0,1.0),1.0);
 }`;
 
 const COMP_FS = `#version 300 es
@@ -108,19 +122,15 @@ void main(){
   float light = clamp(lum/max(uMean,0.001), 0.5, 1.7);
   vec3 lit = flake*light;
 
-  // --- polyaspartic clear coat ---
-  // wet look: a gloss coat deepens + saturates the flake (like water on stone)
+  // --- polyaspartic clear coat (fully procedural -> no scene-sampled artifacts) ---
+  // wet look: a gloss coat deepens + saturates the flake, like water on stone
   vec3 wet = lit*lit*1.45;
   lit = mix(lit, wet, uGloss*0.6);
-  // mirror reflection of the room: the floor reflects what is above it. Sample the
-  // scene vertically mirrored about the floor's back edge, blurred by distance.
-  float horizon = 0.42;                          // approx back-edge in screen v
-  float rv = horizon*2.0 - vUv.y;                // mirror this pixel above the horizon
-  vec3 refl = texture(uScene, vec2(vUv.x, clamp(rv,0.0,1.0))).rgb;
-  float reflFade = smoothstep(0.05, 0.95, f.y);  // stronger toward the back (near reflected objects)
-  // specular hotspots already baked in the photo's bright floor areas
-  float hot = smoothstep(uMean*1.04, 1.0, lum);
-  vec3 coat = refl*0.20*reflFade + vec3(1.0)*hot*0.55;
+  // a smooth far-field sheen that brightens toward the back, plus the photo's own
+  // bright floor spots. No mirroring of the room, so bright windows cannot blob.
+  float sheen = smoothstep(0.1, 1.0, f.y) * 0.5;
+  float hot = clamp(smoothstep(uMean*1.06, 1.0, lum), 0.0, 0.6);
+  vec3 coat = vec3(0.96, 0.97, 1.0) * (sheen*0.55 + hot*0.5);
   vec3 glossed = lit + uGloss*coat;
   frag = vec4(mix(scene, glossed, edge), 1.0);
 }`;

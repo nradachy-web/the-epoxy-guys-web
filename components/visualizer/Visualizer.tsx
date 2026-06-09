@@ -22,6 +22,8 @@ export default function Visualizer() {
   const rendererRef = useRef<FlakeRenderer | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [ready, setReady] = useState(false);
+  const [swatches, setSwatches] = useState<Record<string, string>>({});
+  const [currentSwatch, setCurrentSwatch] = useState<string>("");
 
   const [scene, setScene] = useState<Scene>(presetScenes[0]);
   const [blend, setBlend] = useState<Blend>(presets[0]);
@@ -33,11 +35,15 @@ export default function Visualizer() {
   const [marking, setMarking] = useState<{ url: string; w: number; h: number } | null>(null);
   const [markCorners, setMarkCorners] = useState<Corner[]>([[0.06, 0.92], [0.94, 0.92], [0.72, 0.58], [0.28, 0.58]]);
 
-  // init renderer
+  // init renderer + pre-render the real flake swatches for the whole catalog
   useEffect(() => {
     if (!canvasRef.current) return;
     try {
-      rendererRef.current = new FlakeRenderer(canvasRef.current);
+      const r = new FlakeRenderer(canvasRef.current);
+      rendererRef.current = r;
+      const sw: Record<string, string> = {};
+      for (const p of presets) sw[p.slug] = r.swatchDataURL(p, 240);
+      setSwatches(sw);
     } catch (e) {
       setError(e instanceof Error ? e.message : "WebGL2 is not available in this browser.");
     }
@@ -51,16 +57,32 @@ export default function Visualizer() {
     let alive = true;
     setReady(false);
     r.loadScene(scene.image, scene.corners, scene.tile, scene.wallReject ?? 1.2)
-      .then(() => { if (alive) { r.render(blend, gloss); setReady(true); } })
+      .then(() => {
+        if (!alive) return;
+        setCurrentSwatch(r.swatchDataURL(blend, 240)); // renders flake into the FBO
+        r.composite(gloss);
+        setReady(true);
+      })
       .catch((e) => setError(String(e?.message || e)));
     return () => { alive = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scene]);
 
-  // re-render on blend/gloss
+  // flake recipe changed -> regen swatch (also fills the FBO) + repaint floor
   useEffect(() => {
-    if (rendererRef.current && ready && !error) rendererRef.current.render(blend, gloss);
-  }, [blend, gloss, ready, error]);
+    const r = rendererRef.current;
+    if (!r || !ready || error) return;
+    setCurrentSwatch(r.swatchDataURL(blend, 240));
+    r.composite(gloss);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [blend, ready]);
+
+  // gloss only -> recomposite (cheap, no flake re-render)
+  useEffect(() => {
+    const r = rendererRef.current;
+    if (r && ready && !error) r.composite(gloss);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gloss]);
 
   const loadPreset = (p: Blend) => { setBlend(p); setGloss(p.gloss); };
   const patch = (u: Partial<Blend>) => setBlend((b) => ({ ...b, ...u, name: "Custom Blend", code: "EG-000" }));
@@ -108,6 +130,21 @@ export default function Visualizer() {
 
       {/* ---- control rail ---- */}
       <aside className="flex flex-col border-t border-line bg-paper lg:border-l lg:border-t-0">
+        {/* current blend preview */}
+        <div className="flex items-center gap-3 border-b border-line p-4">
+          {currentSwatch ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={currentSwatch} alt="" className="h-14 w-14 shrink-0 border border-line-2 object-cover" />
+          ) : (
+            <span className="h-14 w-14 shrink-0 border border-line-2" style={swatchStyle(blend)} />
+          )}
+          <div className="min-w-0">
+            <div className="truncate text-[0.95rem] text-ink">{blend.name}</div>
+            <div className="mono-label text-muted">
+              {blend.code} · {sizeMeta[blend.size].label} · {glossLabel(gloss)}
+            </div>
+          </div>
+        </div>
         {/* tabs */}
         <div className="grid grid-cols-3 border-b border-line">
           {(["presets", "custom", "rooms"] as const).map((t) => (
@@ -136,16 +173,25 @@ export default function Visualizer() {
                 ))}
               </div>
               <div className="mt-5 grid grid-cols-3 gap-x-4 gap-y-5">
-                {filtered.map((p) => (
-                  <button key={p.slug} onClick={() => loadPreset(p)} className="group text-left">
-                    <span
-                      className={`block aspect-square w-full border ${blend.name === p.name && blend.code === p.code ? "border-accent" : "border-line-2"}`}
-                      style={swatchStyle(p)}
-                    />
-                    <span className="mt-2 block text-[0.8rem] leading-tight text-ink">{p.name}</span>
-                    <span className="mono-label text-muted">{p.code}</span>
-                  </button>
-                ))}
+                {filtered.map((p) => {
+                  const active = blend.name === p.name && blend.code === p.code;
+                  return (
+                    <button key={p.slug} onClick={() => loadPreset(p)} className="group text-left">
+                      {swatches[p.slug] ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={swatches[p.slug]}
+                          alt={`${p.name} flake blend`}
+                          className={`block aspect-square w-full border object-cover transition-transform group-hover:scale-[1.02] ${active ? "border-accent" : "border-line-2"}`}
+                        />
+                      ) : (
+                        <span className={`block aspect-square w-full border ${active ? "border-accent" : "border-line-2"}`} style={swatchStyle(p)} />
+                      )}
+                      <span className="mt-2 block text-[0.8rem] leading-tight text-ink">{p.name}</span>
+                      <span className="mono-label text-muted">{p.code}</span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
           )}
@@ -163,18 +209,22 @@ export default function Visualizer() {
               </Field>
 
               <Field label={`Flake colors · ${blend.chips.length}/5`}>
-                <div className="space-y-2">
-                  {blend.chips.map((ch, i) => (
-                    <div key={i} className="flex items-center gap-2">
-                      <span className="h-6 w-6 shrink-0 border border-line-2" style={{ background: ch.hex }} />
-                      <input type="range" min={1} max={10} value={Math.round(ch.weight * 10)}
-                        onChange={(e) => { const c = [...blend.chips]; c[i] = { ...c[i], weight: +e.target.value / 10 }; patch({ chips: c }); }}
-                        className="flex-1 accent-[var(--color-accent)]" />
-                      {blend.chips.length > 1 && (
-                        <button onClick={() => patch({ chips: blend.chips.filter((_, j) => j !== i) })} className="mono-label text-muted hover:text-accent">✕</button>
-                      )}
-                    </div>
-                  ))}
+                <div className="space-y-2.5">
+                  {(() => {
+                    const total = blend.chips.reduce((s, c) => s + c.weight, 0) || 1;
+                    return blend.chips.map((ch, i) => (
+                      <div key={i} className="flex items-center gap-2.5">
+                        <span className="h-6 w-6 shrink-0 border border-line-2" style={{ background: ch.hex }} />
+                        <input type="range" min={1} max={20} value={Math.round(ch.weight * 20)}
+                          onChange={(e) => { const c = [...blend.chips]; c[i] = { ...c[i], weight: +e.target.value / 20 }; patch({ chips: c }); }}
+                          className="flex-1 accent-[var(--color-accent)]" />
+                        <span className="mono-label tnum w-9 text-right text-ink-2">{Math.round((ch.weight / total) * 100)}%</span>
+                        {blend.chips.length > 1 && (
+                          <button onClick={() => patch({ chips: blend.chips.filter((_, j) => j !== i) })} aria-label="Remove color" className="mono-label text-muted transition-colors hover:text-accent">✕</button>
+                        )}
+                      </div>
+                    ));
+                  })()}
                 </div>
                 {blend.chips.length < 5 && (
                   <div className="mt-3 flex flex-wrap gap-1.5 border-t border-line pt-3">
