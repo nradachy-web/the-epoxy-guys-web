@@ -67,7 +67,7 @@ export default function FinishesPage() {
                           className="aspect-[5/4] w-full object-cover"
                         />
                         <figcaption className="plate-caption mt-3">
-                          {no} / {site.address.city}, MI &middot; {f.name}
+                          {no} / Genesee County, MI &middot; {f.name}
                         </figcaption>
                       </figure>
                       <div className="lg:px-2">

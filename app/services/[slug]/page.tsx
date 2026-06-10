@@ -158,15 +158,28 @@ export default async function ServiceDetail({
 
             <Reveal className="order-first lg:order-last">
               <figure className="overflow-hidden">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={asset(media.gallery[0])}
-                  alt={`${service.name} by The Epoxy Guys`}
-                  loading="lazy"
-                  className="aspect-[4/5] w-full object-cover"
-                />
+                {media.video ? (
+                  <video
+                    className="aspect-[4/5] w-full object-cover"
+                    src={asset(media.video)}
+                    poster={asset(media.gallery[0])}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    aria-label={`Silent footage of ${service.name.toLowerCase()} by The Epoxy Guys`}
+                  />
+                ) : (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={asset(media.gallery[0])}
+                    alt={`${service.name} by The Epoxy Guys`}
+                    loading="lazy"
+                    className="aspect-[4/5] w-full object-cover"
+                  />
+                )}
                 <figcaption className="plate-caption mt-3">
-                  01 / {site.address.city}, MI · {service.navLabel}
+                  01 / Genesee County, MI · {service.navLabel}
                 </figcaption>
               </figure>
             </Reveal>

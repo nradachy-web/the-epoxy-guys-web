@@ -375,59 +375,61 @@ export const services: Service[] = [
 ];
 
 /** Per-service media + sales copy that isn't on the base Service type:
- *  a stakes line (the cost of not acting), a review to feature, and two real
- *  photos used for the framed lead image and the cinematic photo band. */
+ *  a stakes line (the cost of not acting), a review to feature, two real
+ *  photos used for the framed lead image and the cinematic photo band, and an
+ *  optional silent field-footage clip that replaces the lead image. */
 export const serviceMedia: Record<
   string,
-  { stakes: string; reviewMatch: string; gallery: [string, string] }
+  { stakes: string; reviewMatch: string; gallery: [string, string]; video?: string }
 > = {
   "garage-floor-coatings": {
     stakes:
       "A bare or peeling garage floor traps dust, soaks up oil and road salt, and looks worse every year. Putting it off only makes the slab harder to save.",
     reviewMatch: "garage",
-    gallery: ["/photos/gallery-real-02.jpg", "/photos/real-corvette-flake-floor.jpg"],
+    gallery: ["/photos/gallery-real-22.jpg", "/photos/real-corvette-flake-floor.jpg"],
   },
   "basement-floor-coatings": {
     stakes:
       "Left bare, a basement stays cold, damp, and prone to musty smells, and the square footage you pay for every month goes to waste.",
     reviewMatch: "basement",
-    gallery: ["/photos/gallery-real-04.jpg", "/photos/gallery-real-09.jpg"],
+    gallery: ["/photos/gallery-real-36.jpg", "/photos/finish-solid.jpg"],
   },
   "commercial-industrial-epoxy": {
     stakes:
       "A worn or failing floor fails inspections, traps grime, and quietly tells every customer and inspector that the details here do not matter.",
     reviewMatch: "commercial",
-    gallery: ["/photos/gallery-real-06.jpg", "/photos/gallery-real-08.jpg"],
+    gallery: ["/photos/gallery-real-37.jpg", "/photos/gallery-real-11.jpg"],
   },
   "polyaspartic-coatings": {
     stakes:
       "Cheap epoxy and box-store kits look fine for a season, then peel, yellow, and bubble. Then you pay to do the entire floor a second time.",
     reviewMatch: "one day",
-    gallery: ["/photos/gallery-real-09.jpg", "/photos/gallery-real-02.jpg"],
+    gallery: ["/photos/process-top.jpg", "/photos/gallery-real-14.jpg"],
   },
   "polished-concrete": {
     stakes:
       "Tile cracks, carpet wears out, and replacement floors keep adding up. The slab you already own can outlast all of them with the right finish.",
     reviewMatch: "stained",
-    gallery: ["/photos/gallery-real-01.jpg", "/photos/gallery-real-07.jpg"],
+    gallery: ["/photos/finish-polished.jpg", "/photos/finish-stained.jpg"],
   },
   "residential-epoxy-flooring": {
     stakes:
       "Grout stains, vinyl peels, and the busiest rooms in the house never look truly clean no matter how hard you scrub.",
     reviewMatch: "floor",
-    gallery: ["/photos/gallery-real-03.jpg", "/photos/gallery-real-10.jpg"],
+    gallery: ["/photos/gallery-real-25.jpg", "/photos/gallery-real-23.jpg"],
   },
   "custom-logo-floors": {
     stakes:
       "A blank floor is a missed first impression. People remember a branded entry long after they forget the sign on the wall.",
     reviewMatch: "garage",
-    gallery: ["/photos/finish-logo.jpg", "/photos/real-corvette-flake-floor.jpg"],
+    gallery: ["/photos/gallery-real-28.jpg", "/photos/real-corvette-flake-floor.jpg"],
   },
   "surface-prep-and-repair": {
     stakes:
       "Skip the prep and even the most beautiful coating peels within a winter or two. Proper prep is the difference between a 15-year floor and a callback.",
     reviewMatch: "pitted",
-    gallery: ["/photos/gallery-real-05.jpg", "/photos/gallery-real-09.jpg"],
+    gallery: ["/photos/process-grind.jpg", "/photos/process-crack.jpg"],
+    video: "/video/grind-loop.mp4",
   },
 };
 
@@ -514,6 +516,8 @@ export type ServiceArea = {
   city: string;
   county: string;
   blurb: string;
+  /** real GBP job photo for the city page hero (county-level work, no per-town claim) */
+  image: string;
 };
 
 export const serviceAreas: ServiceArea[] = [
@@ -523,6 +527,7 @@ export const serviceAreas: ServiceArea[] = [
     county: "Genesee County",
     blurb:
       "Our home turf. David has spent the better part of two decades working in and around Flint, and we know exactly how the slabs, salt, and seasons here treat a floor.",
+    image: "/photos/gallery-real-12.jpg",
   },
   {
     slug: "grand-blanc",
@@ -530,6 +535,7 @@ export const serviceAreas: ServiceArea[] = [
     county: "Genesee County",
     blurb:
       "From custom homes to busy commercial spaces, Grand Blanc owners trust us for showroom-quality garage and interior floors with a 15-year warranty.",
+    image: "/photos/gallery-real-13.jpg",
   },
   {
     slug: "fenton",
@@ -537,6 +543,7 @@ export const serviceAreas: ServiceArea[] = [
     county: "Genesee County",
     blurb:
       "Lakeside garages, finished basements, and downtown businesses in Fenton get the same one-day install and meticulous prep we are known for.",
+    image: "/photos/gallery-real-14.jpg",
   },
   {
     slug: "davison",
@@ -544,6 +551,7 @@ export const serviceAreas: ServiceArea[] = [
     county: "Genesee County",
     blurb:
       "Davison homeowners call us to turn dusty garages and damp basements into clean, bright, easy-care living and working space.",
+    image: "/photos/gallery-real-15.jpg",
   },
   {
     slug: "burton",
@@ -551,6 +559,7 @@ export const serviceAreas: ServiceArea[] = [
     county: "Genesee County",
     blurb:
       "Hardworking garages and shops across Burton get floors that stand up to tools, tires, and Michigan winters without peeling.",
+    image: "/photos/gallery-real-16.jpg",
   },
   {
     slug: "flushing",
@@ -558,6 +567,7 @@ export const serviceAreas: ServiceArea[] = [
     county: "Genesee County",
     blurb:
       "Flushing families choose flake and metallic finishes that make the garage the cleanest room in the house, installed in a single day.",
+    image: "/photos/gallery-real-17.jpg",
   },
   {
     slug: "swartz-creek",
@@ -565,6 +575,7 @@ export const serviceAreas: ServiceArea[] = [
     county: "Genesee County",
     blurb:
       "We coat garages, basements, and small commercial floors throughout Swartz Creek with premium polyaspartic systems and an honest quote.",
+    image: "/photos/gallery-real-18.jpg",
   },
   {
     slug: "linden",
@@ -572,6 +583,7 @@ export const serviceAreas: ServiceArea[] = [
     county: "Genesee County",
     blurb:
       "Linden and the Lake Fenton area trust us for durable, beautiful floors that hold up to lake-house traffic and sandy boots.",
+    image: "/photos/gallery-real-19.jpg",
   },
   {
     slug: "clio",
@@ -579,6 +591,7 @@ export const serviceAreas: ServiceArea[] = [
     county: "Genesee County",
     blurb:
       "From Clio garages to pole barns and shops, we deliver tough, good-looking floors with prep that is done right the first time.",
+    image: "/photos/gallery-real-20.jpg",
   },
   {
     slug: "lapeer",
@@ -586,6 +599,7 @@ export const serviceAreas: ServiceArea[] = [
     county: "Lapeer County",
     blurb:
       "Just east of home, Lapeer County customers get the same owner-on-site service for garages, basements, and commercial floors.",
+    image: "/photos/gallery-real-21.jpg",
   },
 ];
 

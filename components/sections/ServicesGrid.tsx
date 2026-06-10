@@ -16,7 +16,8 @@ type System = {
   name: string;
   finish: string;
   town: string;
-  year: string;
+  /** only set when the job's year is actually known */
+  year?: string;
   body: string;
   bestFor: string;
   href: string;
@@ -31,50 +32,46 @@ const systems: System[] = [
     code: "FS-01",
     name: "Flake / Polyaspartic",
     finish: "Decorative flake",
-    town: "Burton, MI",
-    year: "2025",
+    town: "Genesee County, MI",
     body: "The garage favorite. Vinyl flake broadcast into the base for color, traction, and a surface that hides the years, sealed under polyaspartic.",
     bestFor: "Garages · Basements · High-traffic rooms",
     href: "/services/garage-floor-coatings",
-    image: "/photos/graded/gallery-real-01.jpg",
-    alt: "A finished two-car garage with a light flake polyaspartic floor",
+    image: "/photos/graded/gallery-real-12.jpg",
+    alt: "A finished garage with a gray flake polyaspartic floor and a car lift",
     wide: true,
   },
   {
     code: "FS-02",
     name: "Metallic",
     finish: "Pigmented metallic",
-    town: "Grand Blanc, MI",
-    year: "2025",
+    town: "Genesee County, MI",
     body: "The marble look at a fraction of the cost. Metallic pigments flow into three-dimensional effects, no two floors ever exactly alike.",
     bestFor: "Showpiece garages · Retail · Man caves",
     href: "/finishes#metallic",
-    image: "/photos/graded/gallery-real-02.jpg",
-    alt: "A glossy metallic-look epoxy floor reflecting light",
+    image: "/photos/graded/gallery-real-27.jpg",
+    alt: "A pigmented metallic epoxy floor flowing through a commercial lounge",
   },
   {
     code: "FS-03",
     name: "Solid Industrial",
     finish: "Solid color / clear",
-    town: "Flint, MI",
-    year: "2024",
+    town: "Genesee County, MI",
     body: "Seamless, sanitary, and built to take a beating. The commercial workhorse for shops, kitchens, and warehouses, with anti-slip where it counts.",
     bestFor: "Commercial · Shops · Warehouses",
     href: "/services/commercial-industrial-epoxy",
-    image: "/photos/graded/gallery-real-03.jpg",
-    alt: "A finished solid-finish garage floor, edge to edge",
+    image: "/photos/graded/gallery-real-11.jpg",
+    alt: "A solid red epoxy floor in a working auto shop with vehicle lifts",
   },
   {
     code: "FS-04",
     name: "Polished Concrete",
     finish: "Ground & polished",
-    town: "Fenton, MI",
-    year: "2024",
+    town: "Genesee County, MI",
     body: "Refine the slab you already own. Mechanically ground to a smooth, reflective sheen, eco-friendly and nearly maintenance-free.",
     bestFor: "Retail · Offices · Modern interiors",
     href: "/services/polished-concrete",
-    image: "/photos/graded/gallery-real-07.jpg",
-    alt: "A close detail of a polished, reflective concrete surface",
+    image: "/photos/graded/finish-polished.jpg",
+    alt: "A reflective polished concrete floor running through a commercial hall",
   },
 ];
 
@@ -101,7 +98,8 @@ function PlateRow({ s, i }: { s: System; i: number }) {
 
           <figcaption className={`${reverse ? "lg:order-1 lg:text-right" : ""}`}>
             <span className="mono-label tnum">
-              {s.code} · {s.town} · {s.year}
+              {s.code} · {s.town}
+              {s.year ? ` · ${s.year}` : ""}
             </span>
             <h3 className="head-sans mt-3 text-2xl text-ink sm:text-[1.75rem]">{s.name}</h3>
             <p className="mt-3 max-w-sm text-pretty leading-relaxed text-ink-2 lg:inline-block">{s.body}</p>

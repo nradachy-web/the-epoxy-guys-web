@@ -18,7 +18,8 @@ type Plate = {
   alt: string;
   town: string;
   system: string;
-  year: string;
+  /** only set when the job's year is actually known */
+  year?: string;
   /** grid span class for editorial rhythm */
   span: string;
   offset?: string;
@@ -27,39 +28,35 @@ type Plate = {
 const plates: Plate[] = [
   {
     n: "02",
-    src: "/photos/graded/gallery-real-05.jpg",
-    alt: "A finished gray flake epoxy garage floor with a contrasting border",
-    town: "Davison, MI",
+    src: "/photos/graded/gallery-real-34.jpg",
+    alt: "A silver Porsche parked on a glossy flake epoxy garage floor",
+    town: "Genesee County, MI",
     system: "FS-01 Flake",
-    year: "2025",
     span: "lg:col-span-7",
   },
   {
     n: "03",
-    src: "/photos/graded/gallery-real-08.jpg",
-    alt: "A finished garage with a flake epoxy floor",
-    town: "Flushing, MI",
-    system: "FS-01 Flake",
-    year: "2025",
+    src: "/photos/graded/gallery-real-36.jpg",
+    alt: "A metallic epoxy floor in a finished basement bar",
+    town: "Genesee County, MI",
+    system: "FS-02 Metallic",
     span: "lg:col-span-5",
     offset: "lg:mt-20",
   },
   {
     n: "04",
-    src: "/photos/graded/gallery-real-04.jpg",
-    alt: "A room with a finished gray flake epoxy floor",
-    town: "Grand Blanc, MI",
-    system: "FS-02 Metallic",
-    year: "2024",
+    src: "/photos/graded/gallery-real-37.jpg",
+    alt: "A copper glitter epoxy floor in a commercial reception area",
+    town: "Genesee County, MI",
+    system: "Glitter",
     span: "lg:col-span-5",
   },
   {
     n: "05",
-    src: "/photos/graded/gallery-real-10.jpg",
-    alt: "A macro close-up of decorative epoxy flake",
-    town: "Burton, MI",
-    system: "Flake detail",
-    year: "2025",
+    src: "/photos/graded/gallery-real-35.jpg",
+    alt: "Two sports cars parked on a clean speckled garage floor",
+    town: "Genesee County, MI",
+    system: "FS-01 Flake",
     span: "lg:col-span-7",
     offset: "lg:-mt-12",
   },
@@ -74,11 +71,10 @@ const plates: Plate[] = [
   },
   {
     n: "07",
-    src: "/photos/graded/gallery-real-01.jpg",
-    alt: "A finished two-car garage with a light flake epoxy floor",
-    town: "Swartz Creek, MI",
+    src: "/photos/graded/gallery-real-38.jpg",
+    alt: "An organized finished garage with a gray flake epoxy floor",
+    town: "Genesee County, MI",
     system: "FS-01 Flake",
-    year: "2024",
     span: "lg:col-span-5",
     offset: "lg:mt-16",
   },
@@ -111,7 +107,8 @@ export function GalleryPreview({ limit = 6 }: { limit?: number }) {
                   />
                 </div>
                 <p className="plate-caption mt-3">
-                  {p.n} / {p.town} · {p.system} · {p.year}
+                  {p.n} / {p.town} · {p.system}
+                  {p.year ? ` · ${p.year}` : ""}
                 </p>
               </Link>
             </Reveal>

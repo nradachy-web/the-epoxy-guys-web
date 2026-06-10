@@ -24,13 +24,42 @@ from PIL import Image, ImageEnhance, ImageOps
 SRC = "public/photos"
 OUT = "public/photos/graded"
 
-GALLERY = [f"gallery-real-{i:02d}.jpg" for i in range(1, 11)]
-EXTRA = ["real-corvette-flake-floor.jpg", "service-prep.jpg"]
+GALLERY = [f"gallery-real-{i:02d}.jpg" for i in range(1, 39)]
+EXTRA = [
+    "real-corvette-flake-floor.jpg",
+    "service-prep.jpg",
+    # the six install-sequence plates (GBP owner photos, 2026 harvest)
+    "process-grind.jpg",
+    "process-crack.jpg",
+    "process-base.jpg",
+    "process-broadcast.jpg",
+    "process-top.jpg",
+    "process-cure.jpg",
+    # polished concrete plate for the FS-04 catalogue row
+    "finish-polished.jpg",
+]
 
 # per-image vertical focus for portrait crops (keep the floor / subject)
 FOCUS = {
     "gallery-real-02.jpg": 0.45,
     "gallery-real-05.jpg": 0.45,
+    # portrait GBP shots: bias the 3:2 crop low so the floor stays the subject
+    "process-grind.jpg": 0.62,
+    "gallery-real-12.jpg": 0.55,
+    "gallery-real-14.jpg": 0.6,
+    "gallery-real-16.jpg": 0.55,
+    "gallery-real-17.jpg": 0.3,
+    "gallery-real-19.jpg": 0.6,
+    "gallery-real-22.jpg": 0.6,
+    "gallery-real-24.jpg": 0.6,
+    "gallery-real-25.jpg": 0.55,
+    "gallery-real-26.jpg": 0.6,
+    "gallery-real-27.jpg": 0.55,
+    "gallery-real-30.jpg": 0.5,
+    "gallery-real-31.jpg": 0.5,
+    "gallery-real-32.jpg": 0.5,
+    "gallery-real-33.jpg": 0.5,
+    "gallery-real-37.jpg": 0.85,
 }
 
 
@@ -83,7 +112,11 @@ def main():
     save(crop_ratio(hero, 3, 4), "hero-portrait.jpg", q=88, max_w=1200)   # right 55% column
     save(crop_ratio(hero, 4, 5), "hero-45.jpg", q=88, max_w=1200)
     save(crop_ratio(hero, 3, 2), "hero-wide.jpg", q=88, max_w=1400)       # mobile hero
-    print(f"graded {n} plates + 3 hero crops -> {OUT}")
+
+    # the About "Owners" figure renders 3:4 portrait, so it gets its own crop
+    crew = grade(ImageOps.exif_transpose(Image.open(os.path.join(SRC, "about-crew.jpg"))))
+    save(crop_ratio(crew, 3, 4, 0.45), "about-crew.jpg", q=88, max_w=1200)
+    print(f"graded {n} plates + 3 hero crops + crew -> {OUT}")
 
 
 if __name__ == "__main__":

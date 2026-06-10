@@ -2,6 +2,7 @@ import { site } from "@/lib/site";
 import { asset } from "@/lib/asset";
 import { Container, SheetHeader } from "@/components/ui/Primitives";
 import { Reveal } from "@/components/ui/Reveal";
+import { ProcessFilm } from "@/components/sections/ProcessFilm";
 
 /**
  * THE SYSTEM (Sheet 02) — the install read as a measured sequence of six plates,
@@ -25,52 +26,52 @@ const steps: Step[] = [
     title: "Diamond grind",
     body: "We open the slab to bare concrete with diamond grinders, so the coating bonds mechanically, not with a liquid etch shortcut.",
     spec: "Profile · CSP 2-3",
-    image: "/photos/graded/service-prep.jpg",
-    alt: "Diamond grinders opening a garage slab to a clean profile, with the ground dust line visible",
+    image: "/photos/graded/process-grind.jpg",
+    alt: "A crew member running a diamond grinder across a bare garage slab",
   },
   {
     no: "02",
     title: "Crack & pit repair",
     body: "Every crack gets chased and filled, every salt pit patched, every old failure ground out. The floor is made sound before a single coat.",
     spec: "Repair · Full slab",
-    image: "/photos/graded/gallery-real-09.jpg",
-    alt: "A bare, stained, pitted garage slab before repair and coating",
+    image: "/photos/graded/process-crack.jpg",
+    alt: "A crew member chasing and filling cracks in a concrete slab before coating",
   },
   {
     no: "03",
     title: "Basecoat",
     body: "We lay the pigmented epoxy basecoat by hand, edge to edge, while the crew keeps a wet edge so it cures as one continuous film.",
     spec: "Coat · 1 of 2",
-    image: "/photos/graded/gallery-real-06.jpg",
-    alt: "The Epoxy Guys crew rolling a basecoat across a prepped slab",
+    image: "/photos/graded/process-base.jpg",
+    alt: "A crew member rolling the pigmented basecoat across a prepped slab",
   },
   {
     no: "04",
     title: "Flake broadcast",
     body: "Decorative flake is broadcast into the wet base to refusal, adding color, traction, and a surface that hides the years.",
     spec: "Broadcast · To refusal",
-    image: "/photos/graded/gallery-real-07.jpg",
-    alt: "Close detail of a finished flake epoxy surface",
+    image: "/photos/graded/process-broadcast.jpg",
+    alt: "The crew broadcasting decorative flake into a wet epoxy basecoat",
   },
   {
     no: "05",
     title: "Polyaspartic topcoat",
     body: "A UV-stable polyaspartic topcoat seals it all under glass. It resists hot tires, oil, salt, and stains, and it never yellows.",
     spec: "Cure · 45 to 60 min",
-    image: "/photos/graded/gallery-real-02.jpg",
-    alt: "A glossy finished flake floor with a clean specular reflection",
+    image: "/photos/graded/process-top.jpg",
+    alt: "A crew member pulling the clear polyaspartic topcoat with a squeegee",
   },
   {
     no: "06",
     title: "Park in 24 hours",
     body: "Because polyaspartic cures in under an hour, you walk on it the same evening and park on it within a day. We clean up like we were never there.",
     spec: "Service · 15-year warranty",
-    image: "/photos/graded/hero-wide.jpg",
-    alt: "A finished gloss flake floor the day after install, ready to park on",
+    image: "/photos/graded/process-cure.jpg",
+    alt: "A bright finished garage with a gray flake floor, cured and ready to park on",
   },
 ];
 
-export function ProcessTimeline() {
+export function ProcessTimeline({ film = true }: { film?: boolean }) {
   return (
     <section id="process" className="relative bg-paper">
       <Container>
@@ -85,6 +86,8 @@ export function ProcessTimeline() {
               the next morning, here is exactly how it goes.
             </p>
           </div>
+
+          {film ? <ProcessFilm /> : null}
         </div>
 
         <ol className="mt-20 sm:mt-24">

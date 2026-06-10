@@ -68,7 +68,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
           </>
         }
         lead={area.blurb}
-        image="/photos/service-garage.jpg"
+        image={area.image}
       >
         <div className="mt-8 flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-7">
           <Button href="/quote" size="lg" icon={<span aria-hidden>→</span>}>

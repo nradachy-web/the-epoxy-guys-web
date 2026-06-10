@@ -93,13 +93,13 @@ export default function AboutPage() {
               <figure>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={asset("/photos/graded/real-corvette-flake-floor.jpg")}
-                  alt="Glossy flake epoxy garage floor in Genesee County"
+                  src={asset("/photos/graded/about-crew.jpg")}
+                  alt="The Epoxy Guys crew staging materials outside a garage job"
                   loading="lazy"
                   className="aspect-[3/4] w-full object-cover"
                 />
                 <figcaption className="plate-caption mt-3">
-                  01 / Genesee County, MI · Flake / Polyaspartic · 2025
+                  01 / Genesee County, MI · On the job
                 </figcaption>
               </figure>
 
@@ -174,7 +174,7 @@ export default function AboutPage() {
       </Section>
 
       <ProcessVideo index="03" title="The Process" heading="Watch a floor go in, start to finish." className="bg-surface" />
-      <ProcessTimeline />
+      <ProcessTimeline film={false} />
       <Testimonials />
       <CtaBand />
     </>
